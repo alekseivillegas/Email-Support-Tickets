@@ -70,7 +70,7 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
                         $classModifier2 = ' class="wpscst_staff_reply_thead" ';
                         $classModifier3 = ' class="wpscst_staff_reply_tbody" ';
                     }
-                    $theusersname = $user->user_nicename;
+                    $theusersname = $user->display_name;
                 } else {
                     $user = false; // Guest
                     $theusersname = __('Guest', 'wpsc-support-tickets');
