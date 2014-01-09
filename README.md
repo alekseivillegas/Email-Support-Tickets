@@ -1,7 +1,7 @@
 Email Support Tickets
 ---------------------
 
-Email Support Tickets is a support ticket system for WordPress that also sends the message body via email. This plugin was forked from  the [wpsc Support Tickets](http://wordpress.org/plugins/wpsc-support-tickets/) plugin by wpStoreCart, LLC. While that plugin is excellent, this one is modified to meat my goals.
+Email Support Tickets is a support ticket system for WordPress that also sends the message body via email. This plugin was forked from  the [wpsc Support Tickets](http://wordpress.org/plugins/wpsc-support-tickets/) plugin by wpStoreCart, LLC. While that plugin is excellent, this one is modified to meet my goals.
 
 **Main Differences?**
 
