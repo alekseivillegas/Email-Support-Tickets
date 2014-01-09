@@ -1,30 +1,30 @@
 <?php
 /*
-  Plugin Name: wpsc Support Tickets
-  Plugin URI: http://wpscsupporttickets.com/wordpress-support-ticket-plugin/
-  Description: An open source help desk and support ticket system for Wordpress using jQuery. Easy to use for both users & admins.
-  Version: 3.0.9
-  Author: wpStoreCart, LLC
-  Author URI: URI: http://wpstorecart.com/
-  License: LGPL
-  Text Domain: wpsc-support-tickets
- */
+Plugin Name: Email Support Tickets
+Plugin URI: https://github.com/isabelc/Email-Support-Tickets
+Description: Support Ticket system that also sends message body via email.
+Version: 0.0.1
+Author: Isabel Castillo
+Author URI: http://isabelcastillo.com
+License: GPL2
+Text Domain: email-support-tickets
+Domain Path: languages
 
-/*
-  Copyright 2013 wpStoreCart, LLC  (email : admin@wpstorecart.com)
+Copyright 2013 Isabel Castillo (email : me@isabelcastillo.com)
 
-  This library is free software; you can redistribute it and/or modify it under the terms
-  of the GNU Lesser General Public License as published by the Free Software Foundation;
-  either version 2.1 of the License, or (at your option) any later version.
+Email Support Tickets is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, as
+published by the Free Software Foundation.
 
-  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the GNU Lesser General Public License for more details.
+Email Support Tickets is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-  You should have received a copy of the GNU Lesser General Public License along with this
-  library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
-  Boston, MA 02111-1307 USA
- */
+You should have received a copy of the GNU General Public License
+along with Email Support Tickets; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+*/
 
 if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
     require_once(ABSPATH . 'wp-includes/pluggable.php');
