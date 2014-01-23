@@ -1,7 +1,7 @@
 Email Support Tickets
 ---------------------
 
-Email Support Tickets is a support ticket system for WordPress that also sends the message body via email. This plugin was forked from  the [wpsc Support Tickets](http://wordpress.org/plugins/wpsc-support-tickets/) plugin by wpStoreCart, LLC. While that plugin is excellent, this one is modified to meet my goals.
+Email Support Tickets is a support ticket system for WordPress that also sends the message body via email. This plugin was forked from  the [wpsc Support Tickets](http://wordpress.org/plugins/wpsc-support-tickets/) plugin by wpStoreCart, LLC and is an alternative for it. While that plugin was great, this Email Support Tickets plugin is modified to meet my needs.
 
 **Main Differences?**
 
@@ -13,7 +13,7 @@ Email Support Tickets is a support ticket system for WordPress that also sends t
  * Option to enter a Custom Registration URL. The plugin's 'Please log in or register' message links to the default WP registration page. If you have disabled registration in favor of a custom/manual registration page, this gives you option to send customers to that better registration page. Prevents visitors from getting upset by the "User registration is currently not allowed" notice.
 
 
-**Original Features From the [wpsc Support Tickets](http://wordpress.org/plugins/wpsc-support-tickets/) Plugin**
+**Original Features From the [wpsc Support Tickets](http://wordpress.org/plugins/wpsc-support-tickets/) Plugin That Are Kept**
 
  * Users can create support tickets and reply to their own tickets.
  * Guests can use tickets as well, using just their email address. Disabled by default.
