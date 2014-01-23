@@ -112,6 +112,7 @@ if (!class_exists("wpscSupportTickets")) {
                 'email_new_ticket_body' => __('Thank you for opening a new support ticket.  We will look into your issue and respond as soon as possible.', 'wpsc-support-tickets'),
                 'email_new_reply_subject' => __('Your support ticket reply was received.', 'wpsc-support-tickets'),
                 'email_new_reply_body' => __('A reply was posted to one of your support tickets.', 'wpsc-support-tickets'),
+                'registration' => '',
                 'disable_inline_styles' => 'false',
                 'allowguests' => 'false',
                 'allow_all_tickets_to_be_replied' => 'false',
@@ -197,6 +198,9 @@ if (!class_exists("wpscSupportTickets")) {
                 if (isset($_POST['email_new_reply_body'])) {
                     $devOptions['email_new_reply_body'] = stripslashes($_POST['email_new_reply_body']);
                 }
+		if (isset($_POST['registration'])) {
+			$devOptions['registration'] = esc_sql($_POST['registration']);
+		}
                 if (isset($_POST['disable_inline_styles'])) {
                     $devOptions['disable_inline_styles'] = esc_sql($_POST['disable_inline_styles']);
                 }
@@ -265,6 +269,9 @@ if (!class_exists("wpscSupportTickets")) {
                 <strong>' . __('New Reply Email', 'wpsc-support-tickets') . '</strong> ' . __('The subject &amp; body of the email sent to the customer when there is a new reply.', 'wpsc-support-tickets') . '<br /><input name="email_new_reply_subject" value="' . $devOptions['email_new_reply_subject'] . '" style="width:95%;" />
                 <textarea style="width:95%;" name="email_new_reply_body">' . $devOptions['email_new_reply_body'] . '</textarea>
                 <br /><br />
+                
+                 <strong>' . __('Registration Page URL', 'wpsc-support-tickets') . ':</strong> ' . __('Only if you have a custom registration page', 'wpsc-support-tickets') . ' <br /><input name="registration" value="' . $devOptions['registration'] . '" style="width:95%;" /><br /><br />
+
 
                 <p><strong>' . __('Disable inline styles', 'wpsc-support-tickets') . ':</strong> ' . __('Set this to true if you want to disable the inline CSS styles.', 'wpsc-support-tickets') . '  <br />
                 <select name="disable_inline_styles">
@@ -985,7 +992,14 @@ if (!class_exists("wpscSupportTickets")) {
                             $output .= '</div>';
                         }
                     } else {
-                        $output .= __('Please', 'wpsc-support-tickets') . ' <a href="' . wp_login_url(get_permalink()) . '">' . __('log in', 'wpsc-support-tickets') . '</a> ' . __('or', 'wpsc-support-tickets') . ' <a href="' . site_url('/wp-login.php?action=register&redirect_to=' . get_permalink()) . '">' . __('register', 'wpsc-support-tickets') . '</a>.';
+                        
+                        if( ! empty( $devOptions['registration'] ) )
+				$register_url = $devOptions['registration'];
+			else
+				$register_url = site_url('/wp-login.php?action=register&redirect_to=' . get_permalink());
+
+			$output .= __('Please', 'wpsc-support-tickets') . ' <a href="' . wp_login_url(get_permalink()) . '">' . __('log in', 'wpsc-support-tickets') . '</a> ' . __('or', 'wpsc-support-tickets') . ' <a href="' . $register_url . '">' . __('register', 'wpsc-support-tickets') . '</a>.';
+
                     }
 
 
