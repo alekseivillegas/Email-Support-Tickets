@@ -1083,11 +1083,11 @@ if (!function_exists("wpscSupportTicketsAdminPanel")) {
  * END Initialize the admin panel
  */
 function wpscLoadInit() {
-    load_plugin_textdomain('wpsc-support-tickets', false, '/wpsc-support-tickets/languages/');
-
-    wp_enqueue_script('wpsc-support-tickets', plugins_url() . '/wpsc-support-tickets/js/wpsc-support-tickets.js', array('jquery'));
+    load_plugin_textdomain('wpsc-support-tickets', false, '/wpsc-support-tickets/languages/');// @todo fix
+//plugins_url( 'images/wordpress.png' , __FILE__ )
+    wp_enqueue_script('wpsc-support-tickets',  plugins_url('js/wpsc-support-tickets.js', __FILE__), array('jquery'));
     $wpscst_params = array(
-        'wpscstPluginsUrl' => plugins_url(),
+        'estPluginUrl' => plugin_dir_url( __FILE__ ),// @test  was plugins_url()
     );
     wp_localize_script('wpsc-support-tickets', 'wpscstScriptParams', $wpscst_params);
 }
