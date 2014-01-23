@@ -1,9 +1,9 @@
 ﻿=== Email Support Tickets  ===
 Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=me%40isabelcastillo%2ecom
-Tags: support,tickets,support tickets,help,helpdesk,help-desk, email support,support ticket
+Tags: support,tickets,support tickets,email,helpdesk,help-desk, email support,support ticket
 Requires at least: 3.0
-Tested up to: 3.9
+Tested up to: 3.8.1
 Stable tag: 0.0.1
 
 == Description ==

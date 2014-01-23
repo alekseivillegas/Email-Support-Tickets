@@ -110,7 +110,7 @@ if (!class_exists("wpscSupportTickets")) {
                 'email' => get_bloginfo('admin_email'),
                 'email_new_ticket_subject' => __('Your support ticket was received.', 'wpsc-support-tickets'),
                 'email_new_ticket_body' => __('Thank you for opening a new support ticket.  We will look into your issue and respond as soon as possible.', 'wpsc-support-tickets'),
-                'email_new_reply_subject' => __('Your support ticket reply was received.', 'wpsc-support-tickets'),
+                'email_new_reply_subject' => __('Your support ticket has a new reply.', 'wpsc-support-tickets'),
                 'email_new_reply_body' => __('A reply was posted to one of your support tickets.', 'wpsc-support-tickets'),
                 'registration' => '',
                 'disable_inline_styles' => 'false',
