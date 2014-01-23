@@ -150,7 +150,7 @@ if (!class_exists("wpscSupportTickets")) {
             
             <div style="padding: 20px 10px 10px 10px;">';
 
-                echo '<div style="float:left;"><img src="' . plugin_dir_url() . '/images/logo.png" alt="wpscSupportTickets" /></div>';
+                echo '<div style="float:left;"><img src="' . plugin_dir_url(__FILE__) . '/images/logo.png" alt="wpscSupportTickets" /></div>';
 
             echo '
             </div>
@@ -223,13 +223,12 @@ if (!class_exists("wpscSupportTickets")) {
             <form method="post" action="' . $_SERVER["REQUEST_URI"] . '">
                 
 
-        <div id="wst_tabs" style="padding:5px 5px 0px 5px;font-size:1.1em;border-color:#DDD;border-radius:6px;">
+        
             <ul>
                 <li><a href="#wst_tabs-1">' . __('Settings', 'wpsc-support-tickets') . '</a></li>
             </ul>        
             
 
-            <div id="wst_tabs-1">
 
             <p><strong>' . __('Main Page', 'wpsc-support-tickets') . ':</strong> ' . __('You need to use a Page as the base for wpsc Support Tickets.', 'wpsc-support-tickets') . '  <br />
             <select name="wpscSupportTicketsmainpage">
@@ -308,9 +307,7 @@ if (!class_exists("wpscSupportTickets")) {
             echo '
                 </select>
                 </p>
-            </div>
                 
-            </div>
 
             <input type="hidden" name="update_wpscSupportTicketsSettings" value="update" />
             <div> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_wpscSupportTicketsSettings_submit" value="';
@@ -318,10 +315,9 @@ if (!class_exists("wpscSupportTickets")) {
             echo'" /></div>
             
 
-            </div>
-            </div>
             </form>
             
+            </div><!-- .wrap -->
 
         ';
 
@@ -986,7 +982,7 @@ if (!function_exists("wpscSupportTicketsAdminPanel")) {
             return;
         }
         if (function_exists('add_menu_page')) {
-            add_menu_page(__('wpsc Support Tickets', 'wpsc-support-tickets'), __('Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-admin', array(&$wpscSupportTickets, 'printAdminPage'), plugin_dir_url() . '/images/controller.png');
+            add_menu_page(__('wpsc Support Tickets', 'wpsc-support-tickets'), __('Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-admin', array(&$wpscSupportTickets, 'printAdminPage'), plugin_dir_url( __FILE__ ) . '/images/controller.png');
             $settingsPage = add_submenu_page('wpscSupportTickets-admin', __('Settings', 'wpsc-support-tickets'), __('Settings', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-settings', array(&$wpscSupportTickets, 'printAdminPageSettings'));
             $editPage = add_submenu_page(NULL, __('Reply to Support Ticket', 'wpsc-support-tickets'), __('Reply to Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-edit', array(&$wpscSupportTickets, 'printAdminPageEdit'));
             add_action("admin_print_scripts-$editPage", array(&$wpscSupportTickets, 'addHeaderCode'));
