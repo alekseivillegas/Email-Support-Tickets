@@ -50,7 +50,7 @@ if (!is_dir(WP_CONTENT_DIR . '/uploads/wpscSupportTickets/')) {
  * Action definitions 
  */
 function wpscSupportTickets_settings() {
-    do_action('wpscSupportTickets_settings');
+    do_action('wpscSupportTickets_settings');// @todo del
 }
 
 function wpscSupportTickets_saveSettings() {
@@ -150,11 +150,7 @@ if (!class_exists("wpscSupportTickets")) {
             
             <div style="padding: 20px 10px 10px 10px;">';
 
-            if (!function_exists('wpscSupportTicketsPRO')) {
-                echo '<div style="float:left;"><img src="' . plugins_url() . '/wpsc-support-tickets/images/logo.png" alt="wpscSupportTickets" /></div>';
-            } else {
-                echo '<div style="float:left;"><img src="' . plugins_url() . '/wpsc-support-tickets-pro/images/logo_pro.png" alt="wpscSupportTickets" /></div>';
-            }
+                echo '<div style="float:left;"><img src="' . plugin_dir_url() . '/images/logo.png" alt="wpscSupportTickets" /></div>';
 
             echo '
             </div>
@@ -230,7 +226,6 @@ if (!class_exists("wpscSupportTickets")) {
         <div id="wst_tabs" style="padding:5px 5px 0px 5px;font-size:1.1em;border-color:#DDD;border-radius:6px;">
             <ul>
                 <li><a href="#wst_tabs-1">' . __('Settings', 'wpsc-support-tickets') . '</a></li>
-                <li><a href="#wst_tabs-2">' . __('PRO', 'wpsc-support-tickets') . '</a></li>
             </ul>        
             
 
@@ -314,16 +309,11 @@ if (!class_exists("wpscSupportTickets")) {
                 </select>
                 </p>
             </div>
-                <div id="wst_tabs-2">';
-
-            wpscSupportTickets_settings(); // Action hook
-
-            echo '
-                </div>
+                
             </div>
 
             <input type="hidden" name="update_wpscSupportTicketsSettings" value="update" />
-            <div style="float:right;position:relative;top:-20px;"> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_wpscSupportTicketsSettings_submit" value="';
+            <div> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_wpscSupportTicketsSettings_submit" value="';
             _e('Update Settings', 'wpsc-support-tickets');
             echo'" /></div>
             
@@ -335,74 +325,9 @@ if (!class_exists("wpscSupportTickets")) {
 
         ';
 
-            if (!function_exists('wpscSupportTicketsPRO')) {
-                echo '
-                <script type="text/javascript">
-                jQuery(document).ready(function() {
-                    jQuery(\'#buypro\').append(\'<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="REYXW5BR8H5MU"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form>\');
-                });
-                </script>
-            ';
-            }
-        }
-
-        //Prints out the admin page ================================================================================
-        function printAdminPageStats() {
-            global $wpdb;
-            $devOptions = $this->getAdminOptions();
-            if (function_exists('current_user_can') && !current_user_can('manage_wpsc_support_tickets')) {
-                die(__('Unable to Authenticate', 'wpsc-support-tickets'));
-            }
-            
-            echo '<div class="wrap">';
-            
-            $this->adminHeader();
-                        
-            
-            
-            if (@!function_exists('wpscSupportTicketsPRO') ) {
-                echo '<table class="widefat" style="width:98%;"><tr><td>';
-                echo '
-                                
-                                <h2>Upgrade now to wpsc Support Tickets PRO and unlock in depth statistics for the following and more:</h2> 
-                                    <ul>
-                                        <li>Average ticket resolution time</li>
-                                        <li>Number of tickets created in each category</li>
-                                        <li>Number of tickets in each severity level</li>
-                                        <li>Top 10 users who create the most tickets</li>
-                                        <li>The number of completed tickets</li>
-                                        <li>Display how long a ticket has been open</li>
-                                        <li>Display how long it took to resolve a closed ticket</li>
-                                        <li>Bar chart showing the amount of time it took to close the last 30 tickets</li>
-                                        <li>And much more, upgrade to PRO today:</li>
-                                    </ul>
-                                    <div id="buyprostats"><strong>$19.99 USD</strong><br /></div>
-                                
-                              
-                                ';
-                echo '</td></tr></table>
-                <script type="text/javascript">
-                jQuery(document).ready(function() {
-                    jQuery(\'#buyprostats\').append(\'<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="REYXW5BR8H5MU"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form>\');
-                });
-                </script>  ';                    
-            } else {
-                if(@function_exists('wstPROStats')) {
-                    @set_time_limit(0);
-                    echo wstPROStats();
-                } else {
-                    echo '<table class="widefat" style="width:98%;"><tr><td>';
-                    _e('Your version of wpsc Support Tickets is out of date.  Please email: admin@wpstorecart.com with your PayPal transaction ID to recieve the latest version.', 'wpsc-support-tickets');
-                    echo '</td></tr></table>';
-                }
-
-            }
-                
-            
-            
-            echo '</div>';
             
         }
+
 
         //Prints out the admin page ================================================================================
         function printAdminPage() {
@@ -636,7 +561,7 @@ if (!class_exists("wpscSupportTickets")) {
                         <div style="float:left;margin-left:20px;"><h3>' . __('Actions', 'wpsc-support-tickets') . '</h3>
                             <a onclick="if(confirm(\'' . __('Are you sure you want to delete this ticket?', 'wpsc-support-tickets') . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" /> ' . __('Delete Ticket', 'wpsc-support-tickets') . '</a>
                         </div>';
-            if ($devOptions['allow_uploads'] == 'true' && @function_exists('wpscSupportTicketsPRO')) {
+            if ( $devOptions['allow_uploads'] == 'true' ) {
                 $output .= '<div style="float:left;margin-left:20px;"><h3>' . __('Attach a file', 'wpsc-support-tickets') . '</h3> <input type="file" name="wpscst_file" id="wpscst_file"></div>';
             }
             $output .='         
@@ -1061,17 +986,10 @@ if (!function_exists("wpscSupportTicketsAdminPanel")) {
             return;
         }
         if (function_exists('add_menu_page')) {
-            add_menu_page(__('wpsc Support Tickets', 'wpsc-support-tickets'), __('Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-admin', array(&$wpscSupportTickets, 'printAdminPage'), plugins_url() . '/wpsc-support-tickets/images/controller.png');
+            add_menu_page(__('wpsc Support Tickets', 'wpsc-support-tickets'), __('Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-admin', array(&$wpscSupportTickets, 'printAdminPage'), plugin_dir_url() . '/images/controller.png');
             $settingsPage = add_submenu_page('wpscSupportTickets-admin', __('Settings', 'wpsc-support-tickets'), __('Settings', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-settings', array(&$wpscSupportTickets, 'printAdminPageSettings'));
             $editPage = add_submenu_page(NULL, __('Reply to Support Ticket', 'wpsc-support-tickets'), __('Reply to Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-edit', array(&$wpscSupportTickets, 'printAdminPageEdit'));
-            $statsPage = add_submenu_page('wpscSupportTickets-admin', __('Statistics', 'wpsc-support-tickets'), __('Statistics', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-stats', array(&$wpscSupportTickets, 'printAdminPageStats'));
-            if(@function_exists('wstPROStats')) {
-                $statsHeaderCode = 'addStatsHeaderCode';
-            } else {
-                $statsHeaderCode = 'addHeaderCode';
-            }
             add_action("admin_print_scripts-$editPage", array(&$wpscSupportTickets, 'addHeaderCode'));
-            add_action("admin_print_scripts-$statsPage", array(&$wpscSupportTickets, $statsHeaderCode));
             add_action("admin_print_scripts-$settingsPage", array(&$wpscSupportTickets, 'addHeaderCode'));            
         }
     }
@@ -1083,8 +1001,9 @@ if (!function_exists("wpscSupportTicketsAdminPanel")) {
  * END Initialize the admin panel
  */
 function wpscLoadInit() {
-    load_plugin_textdomain('wpsc-support-tickets', false, '/wpsc-support-tickets/languages/');// @todo fix
-//plugins_url( 'images/wordpress.png' , __FILE__ )
+    load_plugin_textdomain('wpsc-support-tickets', false, '/wpsc-support-tickets/languages/');// @todo fix..
+// use this: load_plugin_textdomain( 'rsc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
     wp_enqueue_script('wpsc-support-tickets',  plugins_url('js/wpsc-support-tickets.js', __FILE__), array('jquery'));
     $wpscst_params = array(
         'estPluginUrl' => plugin_dir_url( __FILE__ ),// @test  was plugins_url()
@@ -1106,7 +1025,8 @@ if (isset($wpscSupportTickets)) {
 
 
     register_activation_hook(__FILE__, array(&$wpscSupportTickets, 'wpscSupportTickets_install')); // Install DB schema
-    add_action('wpsc-support-tickets/wpscSupportTickets.php', array(&$wpscSupportTickets, 'init')); // Create options on activation
+    add_action('wpsc-support-tickets/wpscSupportTickets.php', array(&$wpscSupportTickets, 'init')); // Create options on activation // @test
+
     add_action('admin_menu', 'wpscSupportTicketsAdminPanel'); // Create admin panel
     add_action('wp_dashboard_setup', array(&$wpscSupportTickets, 'wpscSupportTickets_main_add_dashboard_widgets')); // Dashboard widget
     //add_action('wp_head', array(&$wpscSupportTickets, 'addHeaderCode')); // Place wpscSupportTickets comment into header
@@ -1114,56 +1034,3 @@ if (isset($wpscSupportTickets)) {
     add_action("wp_print_scripts", array(&$wpscSupportTickets, "addHeaderCode"));
     add_action('init', 'wpscLoadInit'); // Load other languages, and javascript
 }
-/**
- * ===============================================================================================================
- * Call everything
- */
-if (!function_exists('wpscSupportTicketsPRO')) {
-
-    function wstPROSettingsFakeForm() {
-        echo '<div style="opacity:0.5;">
-<p><center><u><h3>wpsc-Support-Tickets PRO Settings:</h3></u></center></p>
-        <p><strong>Allow ticket creators to upload file attachments:</strong> Set this to true if you want ticket creators to be able to upload files.  <br />
-        <select name="allow_uploads" disabled>
-            <option value="true">true</option><option value="false" selected="selected">false</option>
-        </select>
-        </p>
-        
-        <p><strong>Who can view &amp; administrate all tickets:</strong> Users with the following roles will have full access to edit, reply to, close, re-open, and delete all tickets.  <br />
-            <ul>
-            <li><input type="checkbox" name="wstpro_admin[]" value="administrator" checked disabled /> Administrator</li><li><input type="checkbox" name="wstpro_admin[]" value="editor" disabled /> Editor</li><li><input type="checkbox" name="wstpro_admin[]" value="author" disabled /> Author</li><li><input type="checkbox" name="wstpro_admin[]"  value="contributor" disabled /> Contributor</li></ul>
-        </p>
-
-        <p><strong>Allow users to close and reopen tickets?:</strong> Setting this to true, allows users (and/or guests, if the setting is turned on) to reopen or close tickets that they have permission to view.    <br />
-        <select name="allow_closing_ticket" disabled>
-            <option value="false" selected="selected">false</option><option value="true">true</option>
-        </select>
-        </p>
-
-        <p><strong>Send HTML Emails?:</strong> Set this to true if you want emails to be sent in HTML format.  Note that you will need to add HTML markup to the emails in the Settings tab to take advantage of this feature.  <br />
-        <select name="allow_html" disabled>
-            <option value="false" selected="selected">false</option><option value="true">true</option>
-        </select>
-        </p>
-
-
-        <p><strong>Allow everyone to see all tickets?:</strong> Setting this to true, allows all guests and users to view all tickets created by anyone. Do not use this setting if tickets will contain ANY confidential information, and be sure to inform your users that their information is being posted publically.  <br />
-        <select name="allow_all_tickets_to_be_viewed" disabled>
-            <option value="false" selected="selected">false</option><option value="true">true</option>
-        </select>
-        </p>
-
-        <p id="wstpro_reply"><strong>Allow everyone to reply to all open tickets?:</strong> Setting this to true, allows users (and/or guests, if the setting is turned on) to reply to all open tickets created by anyone.  Requires the *Allow everyone to see all tickets* setting to be set to True.  Do not use this setting if tickets will contain ANY confidential information, and be sure to inform your users that their information is being posted publically.  <br />
-        <select name="allow_all_tickets_to_be_replied" disabled>
-            <option value="false" selected="selected">false</option><option value="true">true</option>
-        </select>
-        </p>     </div>       
-        
-        <center><div style="border:3px solid red;width:40%;padding:10px;background:#FFF;position:relative;top:-480px;">Upgrade to wpsc Support Tickets PRO to unlock this page of settings, and much more, including:<br /><br /><ul style="text-align:left;font-size:0.8em;font-weight:bold;"><li>File Uploads & attachments (optional)</li><li>Minimum level to access admin panel can be set by admin</li><li>Bulk edit many tickets at a time</li><li>Send HTML Emails</li><li>Optionally allow all users to see all tickets</li><li>Advanced ticketing system with severity, categories, departments</li><li>Optionally allow users to reopen their own tickets</li> <li>Advanced ticket overview in admin panel</li>       <li>3 Premium Wordpress Themes</li>   </ul><br />$19.99 USD<br /><div  id="buypro"></div></div></center>
-
-        ';
-    }
-
-    add_action('wpscSupportTickets_settings', 'wstPROSettingsFakeForm');
-}
-?>

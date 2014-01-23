@@ -79,7 +79,7 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
     if(isset($results[0])) {
        
            $wpscst_message = '';
-            if($devOptions['allow_uploads']=='true' && function_exists('wpscSupportTicketsPRO') && @isset($_FILES["wpscst_file"]) && @$_FILES["wpscst_file"]["error"] != 4 ) {
+            if($devOptions['allow_uploads']=='true' && @isset($_FILES["wpscst_file"]) && @$_FILES["wpscst_file"]["error"] != 4 ) {// @test if uploads work
 
                 /* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 
