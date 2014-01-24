@@ -24,7 +24,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     } else {
         $emailst_userid = 0;
         $emailst_email = $wpdb->escape($_SESSION['isaest_email']);   
-        $wpscst_username = __('Guest', 'wpsc-support-tickets').' ('.$emailst_email.')';
+        $wpscst_username = __( 'Guest', 'email-support-tickets' ).' ('.$emailst_email.')';
     }    
     
     $primkey = intval($_POST['primkey']);
@@ -43,7 +43,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
         }        
         echo '<div id="wpscst_meta"><strong>'.base64_decode($results[0]['title']).'</strong> ('.$results[0]['resolution'].' - '.base64_decode($results[0]['type']).')</div>';
         echo '<table style="width:100%;">';
-        echo '<thead><tr><th id="wpscst_results_posted_by">'.__('Posted by', 'wpsc-support-tickets').' '.$wpscst_username.' (<span id="wpscst_results_time_posted">'.date('Y-m-d g:i A',$results[0]['time_posted']).'</span>)</th></tr></thead>';
+        echo '<thead><tr><th id="wpscst_results_posted_by">'.__( 'Posted by', 'email-support-tickets' ).' '.$wpscst_username.' (<span id="wpscst_results_time_posted">'.date('Y-m-d g:i A',$results[0]['time_posted']).'</span>)</th></tr></thead>';
 
         $messageData = strip_tags(base64_decode($results[0]['initial_message']),'<p><br><a><br><strong><b><u><ul><li><strike><sub><sup><img><font>');
         $messageData = explode ( '\\', $messageData);
@@ -73,11 +73,11 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                     $theusersname = $user->display_name;
                 } else {
                     $user = false; // Guest
-                    $theusersname = __('Guest', 'wpsc-support-tickets');
+                    $theusersname = __( 'Guest', 'email-support-tickets' );
                 }
 
                 echo '<br /><table style="width:100%;" '.$classModifier1.'>';
-                echo '<thead '.$classModifier2.'><tr><th class="wpscst_results_posted_by">'.__('Posted by', 'wpsc-support-tickets').' '.$theusersname.' (<span class="wpscst_results_timestamp">'.date('Y-m-d g:i A',$results['timestamp']).'</span>)</th></tr></thead>';
+                echo '<thead '.$classModifier2.'><tr><th class="wpscst_results_posted_by">'.__( 'Posted by', 'email-support-tickets' ).' '.$theusersname.' (<span class="wpscst_results_timestamp">'.date('Y-m-d g:i A',$results['timestamp']).'</span>)</th></tr></thead>';
                 $messageData = strip_tags(base64_decode($results['message']),'<p><br><a><br><strong><b><u><ul><li><strike><sub><sup><img><font>');
                 $messageData = explode ( '\\', $messageData);
                 $messageWhole = '';
