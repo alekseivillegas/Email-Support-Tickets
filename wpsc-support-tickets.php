@@ -345,7 +345,7 @@ if (!class_exists("EmailSupportTickets")) {
 
             $resolution = 'Open';
             $output .= '<div id="wst_tabs-1">';
-            $table_name = $wpdb->prefix . "wpscst_tickets";
+            $table_name = $wpdb->prefix . "emailst_tickets";
             $sql = "SELECT * FROM `{$table_name}` WHERE `resolution`='{$resolution}' ORDER BY `last_updated` DESC;";
             $results = $wpdb->get_results($sql, ARRAY_A);
             if (isset($results) && isset($results[0]['primkey'])) {
@@ -381,7 +381,7 @@ if (!class_exists("EmailSupportTickets")) {
 
             $resolution = 'Closed';
             $output = '<div id="wst_tabs-2">';
-            $table_name = $wpdb->prefix . "wpscst_tickets";
+            $table_name = $wpdb->prefix . "emailst_tickets";
             $sql = "SELECT * FROM `{$table_name}` WHERE `resolution`='{$resolution}' ORDER BY `last_updated` DESC;";
             $results = $wpdb->get_results($sql, ARRAY_A);
             if (isset($results) && isset($results[0]['primkey'])) {
@@ -444,7 +444,7 @@ if (!class_exists("EmailSupportTickets")) {
 
             $primkey = intval($_GET['primkey']);
 
-            $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
+            $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
             $results = $wpdb->get_results($sql, ARRAY_A);
             if (isset($results[0])) {
                 echo '<table class="widefat"><tr><td>';
@@ -469,7 +469,7 @@ if (!class_exists("EmailSupportTickets")) {
                 echo '</tbody></table>';
 
 
-                $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_replies` WHERE `ticket_id`='{$primkey}' ORDER BY `timestamp` ASC;";
+                $sql = "SELECT * FROM `{$wpdb->prefix}emailst_replies` WHERE `ticket_id`='{$primkey}' ORDER BY `timestamp` ASC;";
                 $result2 = $wpdb->get_results($sql, ARRAY_A);
                 if (isset($result2)) {
                     foreach ($result2 as $resultsX) {
@@ -513,13 +513,13 @@ if (!class_exists("EmailSupportTickets")) {
                                 });
                             </script>
                             ';
-            $output .= '<form action="' . plugins_url('/php/reply_ticket.php', __FILE__) . '" method="post" enctype="multipart/form-data"><input type="hidden" name="wpscst_is_staff_reply" value="yes" /><input type="hidden" name="wpscst_edit_primkey" value="' . $primkey . '" /><input type="hidden" name="wpscst_goback" value="yes" /> ';
+            $output .= '<form action="' . plugins_url('/php/reply_ticket.php', __FILE__) . '" method="post" enctype="multipart/form-data"><input type="hidden" name="wpscst_is_staff_reply" value="yes" /><input type="hidden" name="emailst_edit_primkey" value="' . $primkey . '" /><input type="hidden" name="wpscst_goback" value="yes" /> ';
             $output .= '<table class="wpscst-table" style="width:100%;display:none;">';
             $output .= '<tr><td><h3>' . __('Your message', 'wpsc-support-tickets') . '</h3><div id="wpscst_nic_panel2" style="display:block;width:100%;"></div> <textarea name="wpscst_reply" id="wpscst_reply" style="display:block;width:100%;margin:0 auto 0 auto;background-color:#FFF;" rows="5" columns="6"></textarea>';
             $output .= '</td></tr>';
             $exploder = explode('||', $devOptions['departments']);
 
-            $output .= '<tr><td><div style="float:left;"><h3>' . __('Department', 'wpsc-support-tickets') . '</h3><select name="wpscst_department" id="wpscst_department">';
+            $output .= '<tr><td><div style="float:left;"><h3>' . __('Department', 'wpsc-support-tickets') . '</h3><select name="emailst_department" id="emailst_department">';
             if (isset($exploder[0])) {
                 foreach ($exploder as $exploded) {
                     $output .= '<option value="' . $exploded . '"';
@@ -529,7 +529,7 @@ if (!class_exists("EmailSupportTickets")) {
                 }
             }
             $output .= '</select></div>
-                        <div style="float:left;margin-left:20px;"><h3>' . __('Status', 'wpsc-support-tickets') . '</h3><select name="wpscst_status">
+                        <div style="float:left;margin-left:20px;"><h3>' . __('Status', 'wpsc-support-tickets') . '</h3><select name="emailst_status">
                                 <option value="Open"';
             if ($results[0]['resolution'] == 'Open') {
                 $output.= ' selected="selected" ';
@@ -562,7 +562,7 @@ if (!class_exists("EmailSupportTickets")) {
 
             $devOptions = $this->getAdminOptions();
 
-            $table_name = $wpdb->prefix . "wpscst_tickets";
+            $table_name = $wpdb->prefix . "emailst_tickets";
             $sql = "SELECT * FROM `{$table_name}` WHERE `resolution`='Open' ORDER BY `last_updated` DESC;";
             $results = $wpdb->get_results($sql, ARRAY_A);
             if (isset($results) && isset($results[0]['primkey'])) {
@@ -609,27 +609,13 @@ if (!class_exists("EmailSupportTickets")) {
             }
             wp_enqueue_style('plugin_name-admin-ui-css', plugins_url('/css/custom-theme/jquery-ui-1.10.3.custom.css', __FILE__), false, 2, false);
         }
-        
-        function addStatsHeaderCode() {
-            wp_enqueue_script('jquery-ui-core');
-            wp_enqueue_script('jquery-ui-tabs');
-            if (@!class_exists('AGCA')) {
-                wp_enqueue_script('wpscstniceditor', plugins_url('/js/nicedit/nicEdit.js', __FILE__), array('jquery'), '1.3.2');
-            }
-            wp_enqueue_style('plugin_name-admin-ui-css', plugins_url('/css/custom-theme/jquery-ui-1.10.3.custom.css', __FILE__), false, 2, false);
-            
-            wp_enqueue_script('wpscstraphael', plugins_url().'/wpsc-support-tickets-pro/js/tufte-graph/raphael.js', array('jquery'), '1.3.2');
-            wp_enqueue_script('wpscstenumerable', plugins_url().'/wpsc-support-tickets-pro/js/tufte-graph/jquery.enumerable.js', array('jquery'), '1.3.2');
-            wp_enqueue_script('wpscsttufte', plugins_url().'/wpsc-support-tickets-pro/js/tufte-graph/jquery.tufte-graph.js', array('jquery'), '1.3.2');
-            wp_enqueue_style('tufte-admin-ui-css', plugins_url().'/wpsc-support-tickets-pro/js/tufte-graph/tufte-graph.css', false, 2, false);
-        }        
 
         // Installation ==============================================================================================		
         function EmailSupportTickets_install() {
             global $wpdb;
             global $EmailSupportTickets_db_version;
 
-            $table_name = $wpdb->prefix . "wpscst_tickets";
+            $table_name = $wpdb->prefix . "emailst_tickets";
             if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
                 $sql = "
@@ -653,7 +639,7 @@ if (!class_exists("EmailSupportTickets")) {
                 dbDelta($sql);
             }
 
-            $table_name = $wpdb->prefix . "wpscst_replies";
+            $table_name = $wpdb->prefix . "emailst_replies";
             if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
                 $sql = "
@@ -665,13 +651,14 @@ if (!class_exists("EmailSupportTickets")) {
 				`message` TEXT NOT NULL
 				);				
 			";
-
-
                 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
                 dbDelta($sql);
             }
 
+/*
+@test remove
             $table_name = $wpdb->prefix . "wpstorecart_meta";
+
             if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
                 $sql = "
@@ -686,6 +673,7 @@ if (!class_exists("EmailSupportTickets")) {
                 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
                 dbDelta($sql);
             }
+*/
             add_option("EmailSupportTickets_db_version", $EmailSupportTickets_db_version);
         }
 
@@ -694,7 +682,7 @@ if (!class_exists("EmailSupportTickets")) {
         function EmailSupportTickets_mainshortcode($atts) {
             global $wpdb;
 
-            $table_name = $wpdb->prefix . "wpscst_tickets";
+            $table_name = $wpdb->prefix . "emailst_tickets";
 
             $devOptions = $this->getAdminOptions();
 
@@ -715,20 +703,20 @@ if (!class_exists("EmailSupportTickets")) {
                 case 'tickets': // =========================================================
                     if ($devOptions['allow_guests'] == 'true' && !is_user_logged_in() && !$this->hasDisplayed) {
                         if (@isset($_POST['guest_email'])) {
-                            $_SESSION['wpsc_email'] = esc_sql($_POST['guest_email']);
+                            $_SESSION['isaest_email'] = esc_sql($_POST['guest_email']);
                         }
 
                         $output .= '<br />
                                                 <form name="wpscst-guestform" id="wpscst-guestcheckoutform" action="#" method="post">
                                                     <table>
-                                                    <tr><td>' . __('Enter your email address', 'wpsc-support-tickets') . ': </td><td><input type="text" name="guest_email" value="' . $_SESSION['wpsc_email'] . '" /></td></tr>
+                                                    <tr><td>' . __('Enter your email address', 'wpsc-support-tickets') . ': </td><td><input type="text" name="guest_email" value="' . $_SESSION['isaest_email'] . '" /></td></tr>
                                                     <tr><td></td><td><input type="submit" value="' . __('Submit', 'wpsc-support-tickets') . '" class="wpsc-button wpsc-checkout" /></td></tr>
                                                     </table>
                                                 </form>
                                                 <br />
                                                 ';
                     }
-                    if (is_user_logged_in() || @isset($_SESSION['wpsc_email']) || @isset($_POST['guest_email'])) {
+                    if (is_user_logged_in() || @isset($_SESSION['isaest_email']) || @isset($_POST['guest_email'])) {
                         if (!$this->hasDisplayed) {
                             global $current_user;
 
@@ -747,14 +735,14 @@ if (!class_exists("EmailSupportTickets")) {
                             if ($devOptions['disable_inline_styles'] == 'false') {
                                 $output.='style="width:100%"';
                             } $output .='><tr><th><img src="' . plugins_url('/images/Chat.png', __FILE__) . '" alt="' . __('Create a New Ticket', 'wpsc-support-tickets') . '" /> ' . __('Create a New Ticket', 'wpsc-support-tickets') . '</th></tr>';
-                            $output .= '<tr><td><h3>' . __('Title', 'wpsc-support-tickets') . '</h3><input type="text" name="wpscst_title" id="wpscst_title" value=""  ';
+                            $output .= '<tr><td><h3>' . __('Title', 'wpsc-support-tickets') . '</h3><input type="text" name="emailst_title" id="emailst_title" value=""  ';
                             if ($devOptions['disable_inline_styles'] == 'false') {
                                 $output.='style="width:100%"';
                             } $output .=' /></td></tr>';
                             $output .= '<tr><td><h3>' . __('Your message', 'wpsc-support-tickets') . '</h3><div id="wpscst_nic_panel" ';
                             if ($devOptions['disable_inline_styles'] == 'false') {
                                 $output.='style="display:block;width:100%;"';
-                            } $output.='></div> <textarea name="wpscst_initial_message" id="wpscst_initial_message" ';
+                            } $output.='></div> <textarea name="emailst_initial_message" id="emailst_initial_message" ';
                             if ($devOptions['disable_inline_styles'] == 'false') {
                                 $output.='style="display:inline;width:100%;margin:0 auto 0 auto;" rows="5"';
                             } $output.='></textarea></td></tr>';
@@ -763,7 +751,7 @@ if (!class_exists("EmailSupportTickets")) {
                             }
                             $exploder = explode('||', $devOptions['departments']);
 
-                            $output .= '<tr><td><h3>' . __('Department', 'wpsc-support-tickets') . '</h3><select name="wpscst_department" id="wpscst_department">';
+                            $output .= '<tr><td><h3>' . __('Department', 'wpsc-support-tickets') . '</h3><select name="emailst_department" id="emailst_department">';
                             if (isset($exploder[0])) {
                                 foreach ($exploder as $exploded) {
                                     $output .= '<option value="' . $exploded . '">' . $exploded . '</option>';
@@ -786,7 +774,7 @@ if (!class_exists("EmailSupportTickets")) {
 
                             $output .= '</table></form>';
 
-                            $output .= '<form action="' . plugins_url('/php/reply_ticket.php', __FILE__) . '" method="post" enctype="multipart/form-data"><input type="hidden" value="0" id="wpscst_edit_primkey" name="wpscst_edit_primkey" />';
+                            $output .= '<form action="' . plugins_url('/php/reply_ticket.php', __FILE__) . '" method="post" enctype="multipart/form-data"><input type="hidden" value="0" id="emailst_edit_primkey" name="emailst_edit_primkey" />';
                             if (@isset($_POST['guest_email'])) {
                                 $output .= '<input type="hidden" name="guest_email" value="' . esc_sql($_POST['guest_email']) . '" />';
                             }
@@ -811,7 +799,7 @@ if (!class_exists("EmailSupportTickets")) {
 
                             if ($devOptions['allow_closing_ticket'] == 'true') {
                                 $output .= '
-                                                        <select name="wpscst_set_status" id="wpscst_set_status">
+                                                        <select name="emailst_set_status" id="emailst_set_status">
                                                                             <option value="Open">' . __('Open', 'wpsc-support-tickets') . '</option>
                                                                             <option value="Closed">' . __('Closed', 'wpsc-support-tickets') . '</option>
                                                                     </select>            
@@ -837,13 +825,13 @@ if (!class_exists("EmailSupportTickets")) {
 
                             // Guest additions here
                             if (is_user_logged_in()) {
-                                $wpscst_userid = $current_user->ID;
-                                $wpscst_email = $current_user->user_email;
+                                $emailst_userid = $current_user->ID;
+                                $emailst_email = $current_user->user_email;
                                 $wpscst_username = $current_user->display_name;
                             } else {
-                                $wpscst_userid = 0;
-                                $wpscst_email = esc_sql($_SESSION['wpsc_email']);
-                                $wpscst_username = __('Guest', 'wpsc-support-tickets') . ' (' . $wpscst_email . ')';
+                                $emailst_userid = 0;
+                                $emailst_email = esc_sql($_SESSION['isaest_email']);
+                                $wpscst_username = __('Guest', 'wpsc-support-tickets') . ' (' . $emailst_email . ')';
                             }
 
                             $output .= '<div id="wpscst_edit_div">';
@@ -852,7 +840,7 @@ if (!class_exists("EmailSupportTickets")) {
                                 $sql = "SELECT * FROM `{$table_name}` ORDER BY `last_updated` DESC;";
                             }
                             if ($devOptions['allow_all_tickets_to_be_viewed'] == 'false') {
-                                $sql = "SELECT * FROM `{$table_name}` WHERE `user_id`={$wpscst_userid} AND `email`='{$wpscst_email}' ORDER BY `last_updated` DESC;";
+                                $sql = "SELECT * FROM `{$table_name}` WHERE `user_id`={$emailst_userid} AND `email`='{$emailst_email}' ORDER BY `last_updated` DESC;";
                             }
 
                             $results = $wpdb->get_results($sql, ARRAY_A);

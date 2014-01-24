@@ -12,21 +12,21 @@ $devOptions = $EmailSupportTickets->getAdminOptions();
 if (session_id() == "") {@session_start();};
 
 if ( current_user_can('manage_wpsc_support_tickets')) { // admin edits such as closing tickets should happen here first:
-    if(@isset($_POST['wpscst_status']) && @isset($_POST['wpscst_department']) && is_numeric($_POST['wpscst_edit_primkey'])) {
-        $wpscst_department = base64_encode(strip_tags($_POST['wpscst_department']));
-        $wpscst_status = $wpdb->escape($_POST['wpscst_status']);
-        $primkey = intval($_POST['wpscst_edit_primkey']);
+    if(@isset($_POST['emailst_status']) && @isset($_POST['emailst_department']) && is_numeric($_POST['emailst_edit_primkey'])) {
+        $emailst_department = base64_encode(strip_tags($_POST['emailst_department']));
+        $emailst_status = $wpdb->escape($_POST['emailst_status']);
+        $primkey = intval($_POST['emailst_edit_primkey']);
         // Update the Last Updated time stamp
-        $updateSQL = "UPDATE `{$wpdb->prefix}wpscst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `type`='{$wpscst_department}', `resolution`='{$wpscst_status}' WHERE `primkey` ='{$primkey}';";
+        $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `type`='{$emailst_department}', `resolution`='{$emailst_status}' WHERE `primkey` ='{$primkey}';";
         $wpdb->query($updateSQL);
     }
 }
 
 // Update the status if applicable
-if( @isset( $_POST['wpscst_set_status'] ) && $devOptions['allow_closing_ticket']=='true' ) {
-    $primkey = intval($_POST['wpscst_edit_primkey']);
-    $wpscst_set_status = esc_sql($_POST['wpscst_set_status']);
-    $updateSQL = "UPDATE `{$wpdb->prefix}wpscst_tickets` SET `resolution`='{$wpscst_set_status}' WHERE `primkey` ='{$primkey}';";
+if( @isset( $_POST['emailst_set_status'] ) && $devOptions['allow_closing_ticket']=='true' ) {
+    $primkey = intval($_POST['emailst_edit_primkey']);
+    $emailst_set_status = esc_sql($_POST['emailst_set_status']);
+    $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `resolution`='{$emailst_set_status}' WHERE `primkey` ='{$primkey}';";
     $wpdb->query($updateSQL);
 }
 
@@ -34,9 +34,9 @@ if( @isset( $_POST['wpscst_set_status'] ) && $devOptions['allow_closing_ticket']
 
 $string = trim(strip_tags(str_replace(chr(173), "", $_POST['wpscst_reply'])));
 if($string=='') { // No blank replies allowed
-    if($_POST['wpscst_goback']=='yes' && is_numeric($_POST['wpscst_edit_primkey']) ) {
+    if($_POST['wpscst_goback']=='yes' && is_numeric($_POST['emailst_edit_primkey']) ) {
         header("HTTP/1.1 301 Moved Permanently");
-        header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$_POST['wpscst_edit_primkey']);
+        header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$_POST['emailst_edit_primkey']);
     } else {
         header("HTTP/1.1 301 Moved Permanently");
         header ('Location: '.get_permalink($devOptions['mainpage']));
@@ -45,34 +45,34 @@ if($string=='') { // No blank replies allowed
 }
 
 // If there is a reply and we're still executing code, now we'll add the reply
-if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST['wpscst_edit_primkey'])) {
+if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_POST['emailst_edit_primkey'])) {
 
     // Guest additions here
     if(is_user_logged_in()) {
-        $wpscst_userid = $current_user->ID;
-        $wpscst_email = $current_user->user_email;
+        $emailst_userid = $current_user->ID;
+        $emailst_email = $current_user->user_email;
     } else {
-        $wpscst_userid = 0;
-        $wpscst_email = $wpdb->escape($_SESSION['wpsc_email']);  
-        if(trim($wpscst_email)=='') {
-            $wpscst_email = @$wpdb->escape($_POST['guest_email']);
+        $emailst_userid = 0;
+        $emailst_email = $wpdb->escape($_SESSION['isaest_email']);  
+        if(trim($emailst_email)=='') {
+            $emailst_email = @$wpdb->escape($_POST['guest_email']);
         }        
     }    
     
-    $primkey = intval($_POST['wpscst_edit_primkey']);
+    $primkey = intval($_POST['emailst_edit_primkey']);
     if ( !current_user_can('manage_wpsc_support_tickets')) {
 
        if($devOptions['allow_all_tickets_to_be_replied']=='true' && $devOptions['allow_all_tickets_to_be_viewed']=='true') {
-           $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
+           $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
         }                                                
 
        if($devOptions['allow_all_tickets_to_be_replied']=='false' || $devOptions['allow_all_tickets_to_be_viewed']=='false') {
 
-           $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}' AND `user_id`='{$wpscst_userid}' AND `email`='{$wpscst_email}' LIMIT 0, 1;";
+           $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' AND `user_id`='{$emailst_userid}' AND `email`='{$emailst_email}' LIMIT 0, 1;";
         }        
     } else {
         // This allows approved users, such as the admin, to reply to any support ticket
-        $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
+        $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
     }
    $results = $wpdb->get_results( $sql , ARRAY_A );
 
@@ -175,7 +175,7 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
         
             $wpscst_message = base64_encode($_POST['wpscst_reply'] . $wpscst_message);
             $sql = "
-            INSERT INTO `{$wpdb->prefix}wpscst_replies` (
+            INSERT INTO `{$wpdb->prefix}emailst_replies` (
                 `primkey` ,
                 `ticket_id` ,
                 `user_id` ,
@@ -183,7 +183,7 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
                 `message`
             )
             VALUES (
-                NULL , '{$primkey}', '{$wpscst_userid}', '".current_time( 'timestamp' )."', '{$wpscst_message}'
+                NULL , '{$primkey}', '{$emailst_userid}', '".current_time( 'timestamp' )."', '{$wpscst_message}'
             );
             ";
            $wpdb->query($sql);
@@ -193,12 +193,12 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
             // Update the Last Updated time stamp
             if($_POST['wpscst_is_staff_reply']=='yes' && current_user_can('manage_wpsc_support_tickets')) {
                     // This is a staff reply from the admin panel
-                    $updateSQL = "UPDATE `{$wpdb->prefix}wpscst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `last_staff_reply` = '".time()."' WHERE `primkey` ='{$primkey}';";
+                    $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `last_staff_reply` = '".time()."' WHERE `primkey` ='{$primkey}';";
 
 				$isa_staff_reply = 'true'; // @isa
             } else {
                     // This is a reply from the front end
-                    $updateSQL = "UPDATE `{$wpdb->prefix}wpscst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."' WHERE `primkey` ='{$primkey}';";
+                    $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."' WHERE `primkey` ='{$primkey}';";
             }
             $wpdb->query($updateSQL);
 

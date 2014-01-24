@@ -18,8 +18,8 @@ if(is_user_logged_in()) {
     if(@isset($_GET['ticketid']) && @is_numeric($_GET['ticketid']) && @!isset($_GET['replyid'])) {
         $primkey = intval($_GET['ticketid']);
 
-        $wpdb->query("DELETE FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}';");
-        $wpdb->query("DELETE FROM `{$wpdb->prefix}wpscst_replies` WHERE `ticket_id`='{$primkey}';");
+        $wpdb->query("DELETE FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}';");
+        $wpdb->query("DELETE FROM `{$wpdb->prefix}emailst_replies` WHERE `ticket_id`='{$primkey}';");
         header("HTTP/1.1 301 Moved Permanently");
         header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-admin');
         exit();
@@ -28,7 +28,7 @@ if(is_user_logged_in()) {
         $primkey = intval($_GET['replyid']);
         $ticketprimkey = intval($_GET['ticketid']);
 
-        $wpdb->query("DELETE FROM `{$wpdb->prefix}wpscst_replies` WHERE `primkey`='{$primkey}';");
+        $wpdb->query("DELETE FROM `{$wpdb->prefix}emailst_replies` WHERE `primkey`='{$primkey}';");
         header("HTTP/1.1 301 Moved Permanently");
         header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$ticketprimkey);
         exit();

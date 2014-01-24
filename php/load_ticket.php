@@ -5,35 +5,35 @@ if($wpsc_error_reporting==false) {
 }
 if (!function_exists('add_action'))
 {
-    require_once("../../../../wp-config.php");
+    require_once("../../../../wp-config.php");// @todo remove
 }
 
 global $current_user, $wpdb;
 
 if (session_id() == "") {@session_start();};
 
-if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST['primkey'])) {
+if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_POST['primkey'])) {
     
     $devOptions = get_option('EmailSupportTicketsAdminOptions');
     
     // Guest additions here
     if(is_user_logged_in()) {
-        $wpscst_userid = $current_user->ID;
-        $wpscst_email = $current_user->user_email;
+        $emailst_userid = $current_user->ID;
+        $emailst_email = $current_user->user_email;
         $wpscst_username = $current_user->display_name;
     } else {
-        $wpscst_userid = 0;
-        $wpscst_email = $wpdb->escape($_SESSION['wpsc_email']);   
-        $wpscst_username = __('Guest', 'wpsc-support-tickets').' ('.$wpscst_email.')';
+        $emailst_userid = 0;
+        $emailst_email = $wpdb->escape($_SESSION['isaest_email']);   
+        $wpscst_username = __('Guest', 'wpsc-support-tickets').' ('.$emailst_email.')';
     }    
     
     $primkey = intval($_POST['primkey']);
 
     if($devOptions['allow_all_tickets_to_be_viewed']=='true') {
-        $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
+        $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
     }                                                
     if($devOptions['allow_all_tickets_to_be_viewed']=='false') {
-        $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}' AND `user_id`='{$wpscst_userid}' AND `email`='{$wpscst_email}' LIMIT 0, 1;";
+        $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' AND `user_id`='{$emailst_userid}' AND `email`='{$emailst_email}' LIMIT 0, 1;";
     }    
     
     $results = $wpdb->get_results( $sql , ARRAY_A );
@@ -57,7 +57,7 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
         echo '</tbody></table>';
 
         $results = NULL;
-        $sql = "SELECT * FROM `{$wpdb->prefix}wpscst_replies` WHERE `ticket_id`='{$primkey}' ORDER BY `timestamp` ASC;";
+        $sql = "SELECT * FROM `{$wpdb->prefix}emailst_replies` WHERE `ticket_id`='{$primkey}' ORDER BY `timestamp` ASC;";
         $result2 = $wpdb->get_results( $sql , ARRAY_A );
         if(isset($result2)) {
             foreach ($result2 as $results) {

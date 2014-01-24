@@ -14,8 +14,8 @@ if(!isset($devOptions['mainpage']) || $devOptions['mainpage']=='') {
 }
 
 if (session_id() == "") {@session_start();};
-if(is_user_logged_in() || @isset($_SESSION['wpsc_email'])) {
-    if(trim($_POST['wpscst_initial_message'])=='' || trim($_POST['wpscst_title'])=='') {// No blank messages/titles allowed
+if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
+    if(trim($_POST['emailst_initial_message'])=='' || trim($_POST['emailst_title'])=='') {// No blank messages/titles allowed
             if(!headers_sent()) {
                 header("HTTP/1.1 301 Moved Permanently");
                 header ('Location: '.get_permalink($devOptions['mainpage']));
@@ -30,17 +30,17 @@ if(is_user_logged_in() || @isset($_SESSION['wpsc_email'])) {
         } 
     // Guest additions here
     if(is_user_logged_in()) {
-        $wpscst_userid = $current_user->ID;
-        $wpscst_email = $current_user->user_email;
+        $emailst_userid = $current_user->ID;
+        $emailst_email = $current_user->user_email;
     } else {
-       $wpscst_userid = 0;
-        $wpscst_email = $wpdb->escape($_SESSION['wpsc_email']);     
-        if(trim($wpscst_email)=='') {
-            $wpscst_email = @$wpdb->escape($_POST['guest_email']);
+       $emailst_userid = 0;
+        $emailst_email = $wpdb->escape($_SESSION['isaest_email']);     
+        if(trim($emailst_email)=='') {
+            $emailst_email = @$wpdb->escape($_POST['guest_email']);
         }
     }
 
-    $wpscst_initial_message = '';
+    $emailst_initial_message = '';
     if($devOptions['allow_uploads']=='true' && @isset($_FILES["wpscst_file"]) && @$_FILES["wpscst_file"]["error"] != 4 ) {
 	/* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 	will have to check for any error messages and react as needed. */
@@ -111,25 +111,25 @@ if(is_user_logged_in() || @isset($_SESSION['wpsc_email'])) {
 			HandleError(__("File could not be saved.", 'wpsc-support-tickets'));
 		} else {
                     // SUCCESS
-                   $wpscst_initial_message .= '<br /><p class="wpsc-support-ticket-attachment"';
+                   $emailst_initial_message .= '<br /><p class="wpsc-support-ticket-attachment"';
                     if($devOptions['disable_inline_styles']=='false'){
-                        $wpscst_initial_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
+                        $emailst_initial_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
                     }
-                    $wpscst_initial_message .= '>';
-                    $wpscst_initial_message .= '<img src="'.plugins_url().'/wpsc-support-tickets-pro/images/attachment.png" alt="" /> <strong>'.__('ATTACHMENT','wpsc-support-tickets').'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'</a></p>';
+                    $emailst_initial_message .= '>';
+                    $emailst_initial_message .= '<img src="'.plugins_url().'/wpsc-support-tickets-pro/images/attachment.png" alt="" /> <strong>'.__('ATTACHMENT','wpsc-support-tickets').'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'</a></p>';
 	       }       
     }    
-    $wpscst_title = base64_encode(strip_tags($_POST['wpscst_title']));
-    $wpscst_initial_message = base64_encode($_POST['wpscst_initial_message'] . $wpscst_initial_message);
-    $wpscst_department = base64_encode(strip_tags($_POST['wpscst_department']));    
+    $emailst_title = base64_encode(strip_tags($_POST['emailst_title']));
+    $emailst_initial_message = base64_encode($_POST['emailst_initial_message'] . $emailst_initial_message);
+    $emailst_department = base64_encode(strip_tags($_POST['emailst_department']));    
 	$sql = "
-    INSERT INTO `{$wpdb->prefix}wpscst_tickets` (
+    INSERT INTO `{$wpdb->prefix}emailst_tickets` (
         `primkey`, `title`, `initial_message`, `user_id`, `email`, `assigned_to`, `severity`, `resolution`, `time_posted`, `last_updated`, `last_staff_reply`, `target_response_time`, `type`) VALUES (
             NULL,
-            '{$wpscst_title}',
-            '{$wpscst_initial_message}',
-            '{$wpscst_userid}',
-            '{$wpscst_email}',
+            '{$emailst_title}',
+            '{$emailst_initial_message}',
+            '{$emailst_userid}',
+            '{$emailst_email}',
             '0',
             'Normal',
             'Open',
@@ -137,12 +137,12 @@ if(is_user_logged_in() || @isset($_SESSION['wpsc_email'])) {
             '".current_time( 'timestamp' )."',
             '',
             '2 days',
-            '{$wpscst_department}'
+            '{$emailst_department}'
         );
     ";
     $wpdb->query($sql);
     $lastID = $wpdb->insert_id;
-    $to      = $wpscst_email; // Send this to the ticket creator
+    $to      = $emailst_email; // Send this to the ticket creator
     $subject = $devOptions['email_new_ticket_subject'];
     $message = $devOptions['email_new_ticket_body'];
     $headers = '';
@@ -157,7 +157,7 @@ if(is_user_logged_in() || @isset($_SESSION['wpsc_email'])) {
     $to      = $devOptions['email']; // Send this to the admin
     $subject = __("A new support ticket was received.", 'wpsc-support-tickets');
     $message = __('There is a new support ticket: ','wpsc-support-tickets').get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$lastID;
-	$message .= '<br /><br />Here is the initial message:<br /><br />' . stripslashes_deep(base64_decode($wpscst_initial_message));// @test isa
+	$message .= '<br /><br />Here is the initial message:<br /><br />' . stripslashes_deep(base64_decode($emailst_initial_message));// @test isa
     $headers = '';
         $headers .= 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                

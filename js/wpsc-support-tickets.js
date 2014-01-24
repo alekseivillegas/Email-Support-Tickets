@@ -4,7 +4,7 @@
                 if(jQuery('#wpscst_nic_panel').length > 0) {
                     var myNicEditor = new nicEditor({buttonList : ['fontSize','bold','italic','underline','strikethrough','ul', 'subscript','superscript','image','link','unlink'], iconsPath:wpscstScriptParams.estPluginUrl + "/js/nicedit/nicEditorIcons.gif"});
                     myNicEditor.setPanel("wpscst_nic_panel");
-                    myNicEditor.addInstance("wpscst_initial_message");
+                    myNicEditor.addInstance("emailst_initial_message");
                 }
                 if(jQuery('#wpscst_nic_panel2').length > 0) {
                     var myNicEditor2 = new nicEditor({buttonList : ['fontSize','bold','italic','underline','strikethrough','ul', 'subscript','superscript','image','link','unlink'], iconsPath:wpscstScriptParams.estPluginUrl + "/js/nicedit/nicEditorIcons.gif"});
@@ -27,7 +27,7 @@
             jQuery("#wpscst-new").fadeOut("slow");
             jQuery("#wpscst_edit_ticket").fadeIn("slow");
             jQuery("#wpscst_edit_ticket_inner").load(wpscstScriptParams.estPluginUrl + "/php/load_ticket.php", {"primkey":primkey});
-            jQuery("#wpscst_edit_primkey").val(primkey);
+            jQuery("#emailst_edit_primkey").val(primkey);
             jQuery("html, body").animate({scrollTop: jQuery("#wpscst_top_page").offset().top}, 2000);
             if(resolution=="Closed") {
                 jQuery("#wpscst_reply_editor_table_tr1").fadeOut("slow");
@@ -35,11 +35,11 @@
             }
             if(resolution=="Reopenable") {
                 jQuery("#wpscst_reply_editor_table_tr1").fadeOut("slow");
-                jQuery("#wpscst_set_status").val('Closed');
+                jQuery("#emailst_set_status").val('Closed');
             }  
             if(resolution=="Open") {
                 try {
-                    jQuery("#wpscst_set_status").val('Open');
+                    jQuery("#emailst_set_status").val('Open');
                 } catch (e) {
                     
                 }
@@ -54,7 +54,7 @@
             jQuery("#wpscst_edit_div").fadeIn("slow");
             jQuery("#wpscst-new").fadeIn("slow");
             jQuery("#wpscst_edit_ticket").fadeOut("slow");
-            jQuery("#wpscst_edit_primkey").val(0);
+            jQuery("#emailst_edit_primkey").val(0);
             jQuery("#wpscst_reply").html("");
             jQuery(".nicEdit-main").html("");
             jQuery("#wpscst_edit_ticket_inner").html('<center><img src="' + wpscstScriptParams.estPluginUrl + '/images/loading.gif" alt="..." /></center>');
