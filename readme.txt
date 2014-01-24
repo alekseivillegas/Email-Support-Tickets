@@ -1,4 +1,4 @@
-﻿=== Email Support Tickets  ===
+=== Email Support Tickets  ===
 Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=me%40isabelcastillo%2ecom
 Tags: support,tickets,support tickets,email,helpdesk,help-desk, email support,support ticket
@@ -44,7 +44,7 @@ Or, if you want to install manually:
 3. Upload the `/email-support-tickets/` directory to the `/wp-content/plugins/` directory
 4. Activate the plugin through the 'Plugins' menu in WordPress
 5. Create a new page which will be your main support ticket page. Give it a title like "Support Tickets", or so.
-6. Inside this page, place this shortcode only: [wpscSupportTickets]
+6. Inside this page, place this shortcode only: [EmailSupportTickets]
 7. Visit the Email Support Tickets admin page and select that page as the "mainpage" for Email Support Tickets to use.
 
 == Frequently Asked Questions ==

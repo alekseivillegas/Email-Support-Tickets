@@ -7,8 +7,8 @@ if (!function_exists('add_action'))
 {
     require_once("../../../../wp-config.php");
 }
-global $current_user, $wpdb, $wpscSupportTickets;
-$devOptions = $wpscSupportTickets->getAdminOptions();
+global $current_user, $wpdb, $EmailSupportTickets;
+$devOptions = $EmailSupportTickets->getAdminOptions();
 if (session_id() == "") {@session_start();};
 
 if ( current_user_can('manage_wpsc_support_tickets')) { // admin edits such as closing tickets should happen here first:
@@ -36,7 +36,7 @@ $string = trim(strip_tags(str_replace(chr(173), "", $_POST['wpscst_reply'])));
 if($string=='') { // No blank replies allowed
     if($_POST['wpscst_goback']=='yes' && is_numeric($_POST['wpscst_edit_primkey']) ) {
         header("HTTP/1.1 301 Moved Permanently");
-        header ('Location: '.get_admin_url().'admin.php?page=wpscSupportTickets-edit&primkey='.$_POST['wpscst_edit_primkey']);
+        header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$_POST['wpscst_edit_primkey']);
     } else {
         header("HTTP/1.1 301 Moved Permanently");
         header ('Location: '.get_permalink($devOptions['mainpage']));
@@ -228,7 +228,7 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
 
                 $to      = $devOptions['email']; // Send this to the admin
                 $subject = __("Reply to a support ticket was received.", 'wpsc-support-tickets');
-                $message = __('There is a new reply on support ticket: ','wpsc-support-tickets').get_admin_url().'admin.php?page=wpscSupportTickets-edit&primkey='.$primkey.'';
+                $message = __('There is a new reply on support ticket: ','wpsc-support-tickets').get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$primkey.'';
 			$message .= '<br /><br />Here is the reply:<br /><br />' . stripslashes_deep(base64_decode($wpscst_message));// @test isa
                 $headers = '';
                     $headers .= 'MIME-Version: 1.0' . "\r\n";
@@ -244,7 +244,7 @@ if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST
 
 if($_POST['wpscst_goback']=='yes') {
     header("HTTP/1.1 301 Moved Permanently");
-    header ('Location: '.get_admin_url().'admin.php?page=wpscSupportTickets-edit&primkey='.$primkey);
+    header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$primkey);
 } else {
     header("HTTP/1.1 301 Moved Permanently");
     header ('Location: '.get_permalink($devOptions['mainpage']));

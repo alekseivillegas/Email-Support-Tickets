@@ -6,9 +6,9 @@ if($wpsc_error_reporting==false) {
 if (!function_exists('add_action')) {
     require_once("../../../../wp-config.php");
 }
-global $current_user, $wpdb, $wpscSupportTickets;
+global $current_user, $wpdb, $EmailSupportTickets;
 $devOptions = NULL;
-$devOptions = $wpscSupportTickets->getAdminOptions();
+$devOptions = $EmailSupportTickets->getAdminOptions();
 if(!isset($devOptions['mainpage']) || $devOptions['mainpage']=='') {
     $devOptions['mainpage'] = home_url();
 }
@@ -156,7 +156,7 @@ if(is_user_logged_in() || @isset($_SESSION['wpsc_email'])) {
     wp_mail($to, $subject, $message, $headers);
     $to      = $devOptions['email']; // Send this to the admin
     $subject = __("A new support ticket was received.", 'wpsc-support-tickets');
-    $message = __('There is a new support ticket: ','wpsc-support-tickets').get_admin_url().'admin.php?page=wpscSupportTickets-edit&primkey='.$lastID;
+    $message = __('There is a new support ticket: ','wpsc-support-tickets').get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$lastID;
 	$message .= '<br /><br />Here is the initial message:<br /><br />' . stripslashes_deep(base64_decode($wpscst_initial_message));// @test isa
     $headers = '';
         $headers .= 'MIME-Version: 1.0' . "\r\n";

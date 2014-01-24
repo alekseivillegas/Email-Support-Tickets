@@ -32,9 +32,9 @@ if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
 
 
 //Global variables:
-global $wpscSupportTickets, $wpscSupportTickets_version, $wpscSupportTickets_db_version, $APjavascriptQueue, $wpsc_error_reporting;
-$wpscSupportTickets_version = 3.0;
-$wpscSupportTickets_db_version = 3.0;
+global $EmailSupportTickets, $EmailSupportTickets_version, $EmailSupportTickets_db_version, $APjavascriptQueue, $wpsc_error_reporting;
+$EmailSupportTickets_version = 3.0;
+$EmailSupportTickets_db_version = 3.0;
 $APjavascriptQueue = NULL;
 $wpsc_error_reporting = false;
 
@@ -42,44 +42,44 @@ $wpsc_error_reporting = false;
 if (!is_dir(WP_CONTENT_DIR . '/uploads/')) {
     mkdir(WP_CONTENT_DIR . '/uploads/', 0777, true);
 }
-if (!is_dir(WP_CONTENT_DIR . '/uploads/wpscSupportTickets/')) {
-    mkdir(WP_CONTENT_DIR . '/uploads/wpscSupportTickets/', 0777, true);
+if (!is_dir(WP_CONTENT_DIR . '/uploads/EmailSupportTickets/')) {
+    mkdir(WP_CONTENT_DIR . '/uploads/EmailSupportTickets/', 0777, true);
 }
 
 /**
  * Action definitions 
  */
-function wpscSupportTickets_settings() {
-    do_action('wpscSupportTickets_settings');// @todo del
+function EmailSupportTickets_settings() {
+    do_action('EmailSupportTickets_settings');// @todo del
 }
 
-function wpscSupportTickets_saveSettings() {
-    do_action('wpscSupportTickets_saveSettings');
+function EmailSupportTickets_saveSettings() {
+    do_action('EmailSupportTickets_saveSettings');
 }
 
-function wpscSupportTickets_extraTabsIndex() {
-    do_action('wpscSupportTickets_extraTabsIndex');
+function EmailSupportTickets_extraTabsIndex() {
+    do_action('EmailSupportTickets_extraTabsIndex');
 }
 
-function wpscSupportTickets_extraTabsContents() {
-    do_action('wpscSupportTickets_extraTabsContents');
+function EmailSupportTickets_extraTabsContents() {
+    do_action('EmailSupportTickets_extraTabsContents');
 }
 
 /**
  * ===============================================================================================================
- * Main wpscSupportTickets Class
+ * Main EmailSupportTickets Class
  */
-if (!class_exists("wpscSupportTickets")) {
+if (!class_exists("EmailSupportTickets")) {
 
-    class wpscSupportTickets {
+    class EmailSupportTickets {
 
-        var $adminOptionsName = "wpscSupportTicketsAdminOptions";
+        var $adminOptionsName = "EmailSupportTicketsAdminOptions";
         var $wpscstSettings = null;
         var $hasDisplayed = false;
         var $hasDisplayedCompat = false; // hack for Jetpack compatibility
         var $hasDisplayedCompat2 = false; // hack for Jetpack compatibility
 
-        function wpscSupportTickets() { //constructor
+        function EmailSupportTickets() { //constructor
             // Let's make sure the admin is always in charge
             if (is_user_logged_in()) {
                 if (is_super_admin() || is_admin()) {
@@ -105,7 +105,7 @@ if (!class_exists("wpscSupportTickets")) {
         function getAdminOptions() {
 
             $apAdminOptions = array('mainpage' => '',
-                'turnon_wpscSupportTickets' => 'true',
+                'turnon_EmailSupportTickets' => 'true',
                 'departments' => __('Support', 'wpsc-support-tickets') . '||' . __('Billing', 'wpsc-support-tickets'),
                 'email' => get_bloginfo('admin_email'),
                 'email_new_ticket_subject' => __('Your support ticket was received.', 'wpsc-support-tickets'),
@@ -150,7 +150,7 @@ if (!class_exists("wpscSupportTickets")) {
             
             <div style="padding: 20px 10px 10px 10px;">';
 
-                echo '<div style="float:left;"><img src="' . plugin_dir_url(__FILE__) . '/images/logo.png" alt="wpscSupportTickets" /></div>';
+                echo '<div style="float:left;"><img src="' . plugin_dir_url(__FILE__) . '/images/logo.png" alt="EmailSupportTickets" /></div>';
 
             echo '
             </div>
@@ -160,21 +160,24 @@ if (!class_exists("wpscSupportTickets")) {
 
         function printAdminPageSettings() {
 
-            wpscSupportTickets_saveSettings(); // Action hook for saving
+            EmailSupportTickets_saveSettings(); // Action hook for saving
 
             $devOptions = $this->getAdminOptions();
 
-            echo '<div class="wrap">';
+            echo '<script type="text/javascript">
+                jQuery(function() {setTimeout(function(){ jQuery(".updated").fadeOut(); },4000);});
+            </script>
+		<div class="wrap">';
 
             $this->adminHeader();
 
-            if (@isset($_POST['update_wpscSupportTicketsSettings'])) {
+            if (@isset($_POST['update_EmailSupportTicketsSettings'])) {
 
-                if (isset($_POST['wpscSupportTicketsmainpage'])) {
-                    $devOptions['mainpage'] = esc_sql($_POST['wpscSupportTicketsmainpage']);
+                if (isset($_POST['EmailSupportTicketsmainpage'])) {
+                    $devOptions['mainpage'] = esc_sql($_POST['EmailSupportTicketsmainpage']);
                 }
-                if (isset($_POST['turnwpscSupportTicketsOn'])) {
-                    $devOptions['turnon_wpscSupportTickets'] = esc_sql($_POST['turnwpscSupportTicketsOn']);
+                if (isset($_POST['turnEmailSupportTicketsOn'])) {
+                    $devOptions['turnon_EmailSupportTickets'] = esc_sql($_POST['turnEmailSupportTicketsOn']);
                 }
                 if (isset($_POST['departments'])) {
                     $devOptions['departments'] = esc_sql($_POST['departments']);
@@ -205,33 +208,15 @@ if (!class_exists("wpscSupportTickets")) {
                 }
 
                 update_option($this->adminOptionsName, $devOptions);
-
-                echo '<div class="updated"><p><strong>';
+			echo '<div class="updated"><p><strong>';
                 _e("Settings Updated.", "wpsc-support-tickets");
                 echo '</strong></p></div>';
-            }
+            } ?>
 
-            echo '
-                
-            <script type="text/javascript">
-                jQuery(function() {
-                    jQuery( "#wst_tabs" ).tabs();
-                    setTimeout(function(){ jQuery(".updated").fadeOut(); },3000);
-                });
-            </script>
-
-            <form method="post" action="' . $_SERVER["REQUEST_URI"] . '">
-                
-
-        
-            <ul>
-                <li><a href="#wst_tabs-1">' . __('Settings', 'wpsc-support-tickets') . '</a></li>
-            </ul>        
-            
-
-
-            <p><strong>' . __('Main Page', 'wpsc-support-tickets') . ':</strong> ' . __('You need to use a Page as the base for wpsc Support Tickets.', 'wpsc-support-tickets') . '  <br />
-            <select name="wpscSupportTicketsmainpage">
+            <h2><?php _e('Settings', 'wpsc-support-tickets'); ?></h2>
+            <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+            <?php echo '<p><strong>' . __('Main Page', 'wpsc-support-tickets') . ':</strong> ' . __('You need to use a Page as the base for wpsc Support Tickets.', 'wpsc-support-tickets') . '  <br />
+            <select name="EmailSupportTicketsmainpage">
              <option value="">';
             attribute_escape(__('Select page', 'wpsc-support-tickets'));
             echo '</option>';
@@ -264,7 +249,7 @@ if (!class_exists("wpscSupportTickets")) {
                 <textarea style="width:95%;" name="email_new_reply_body">' . $devOptions['email_new_reply_body'] . '</textarea>
                 <br /><br />
                 
-                 <strong>' . __('Registration Page URL', 'wpsc-support-tickets') . ':</strong> ' . __('Only if you have a custom registration page', 'wpsc-support-tickets') . ' <br /><input name="registration" value="' . $devOptions['registration'] . '" style="width:95%;" /><br /><br />
+                 <strong>' . __('Registration Page URL', 'wpsc-support-tickets') . ':</strong> ' . __('Only if you have a custom registration page. Enter entire URL.', 'wpsc-support-tickets') . ' <br /><input name="registration" value="' . $devOptions['registration'] . '" style="width:95%;" /><br /><br />
 
 
                 <p><strong>' . __('Disable inline styles', 'wpsc-support-tickets') . ':</strong> ' . __('Set this to true if you want to disable the inline CSS styles.', 'wpsc-support-tickets') . '  <br />
@@ -309,8 +294,8 @@ if (!class_exists("wpscSupportTickets")) {
                 </p>
                 
 
-            <input type="hidden" name="update_wpscSupportTicketsSettings" value="update" />
-            <div> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_wpscSupportTicketsSettings_submit" value="';
+            <input type="hidden" name="update_EmailSupportTicketsSettings" value="update" />
+            <div> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_EmailSupportTicketsSettings_submit" value="';
             _e('Update Settings', 'wpsc-support-tickets');
             echo'" /></div>
             
@@ -352,7 +337,7 @@ if (!class_exists("wpscSupportTickets")) {
                                 <li><a href="#wst_tabs-1">' . __('Open', 'wpsc-support-tickets') . '</a></li>
                                 <li><a href="#wst_tabs-2">' . __('Closed', 'wpsc-support-tickets') . '</a></li>';
 
-            wpscSupportTickets_extraTabsIndex();
+            EmailSupportTickets_extraTabsIndex();
             echo '
                         </ul>                             
 
@@ -387,7 +372,7 @@ if (!class_exists("wpscSupportTickets")) {
                             $last_staff_reply = '<strong>' . __('Staff Member', 'wpsc-support-tickets') . '</strong>';
                         }
                     }
-                    $output .= '<tr><td><a href="admin.php?page=wpscSupportTickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'wpsc-support-tickets') . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=wpscSupportTickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'wpsc-support-tickets') . ' ' . $last_staff_reply . '</td></tr>';
+                    $output .= '<tr><td><a href="admin.php?page=EmailSupportTickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'wpsc-support-tickets') . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=EmailSupportTickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'wpsc-support-tickets') . ' ' . $last_staff_reply . '</td></tr>';
                 }
                 $output .= '</tbody></table>';
             }
@@ -423,7 +408,7 @@ if (!class_exists("wpscSupportTickets")) {
                             $last_staff_reply = '<strong>' . __('Staff Member', 'wpsc-support-tickets') . '</strong>';
                         }
                     }
-                    $output .= '<tr><td><a href="admin.php?page=wpscSupportTickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'wpsc-support-tickets') . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=wpscSupportTickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'wpsc-support-tickets') . ' ' . $last_staff_reply . '</td></tr>';
+                    $output .= '<tr><td><a href="admin.php?page=EmailSupportTickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'wpsc-support-tickets') . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=EmailSupportTickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'wpsc-support-tickets') . ' ' . $last_staff_reply . '</td></tr>';
                 }
                 $output .= '</tbody></table>';
             }
@@ -432,7 +417,7 @@ if (!class_exists("wpscSupportTickets")) {
 
 
 
-            wpscSupportTickets_extraTabsContents();
+            EmailSupportTickets_extraTabsContents();
 
             echo '
 			</div></div>';
@@ -465,7 +450,7 @@ if (!class_exists("wpscSupportTickets")) {
                 echo '<table class="widefat"><tr><td>';
                 if ($results[0]['user_id'] != 0) {
                     @$user = get_userdata($results[0]['user_id']);
-                    $theusersname = '<a href="' . get_admin_url() . 'user-edit.php?user_id=' . $results[0]['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=wpscSupportTickets-admin') . '">' . $user->user_nicename . ' </a>';
+                    $theusersname = '<a href="' . get_admin_url() . 'user-edit.php?user_id=' . $results[0]['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=EmailSupportTickets-admin') . '">' . $user->user_nicename . ' </a>';
                 } else {
                     $user = false; // Guest
                     $theusersname = __('Guest', 'wpsc-support-tickets') . ' - <strong>' . $results[0]['email'] . '</strong>';
@@ -504,7 +489,7 @@ if (!class_exists("wpscSupportTickets")) {
                         }
 
                         echo '<br /><table class="widefat" style="width:100%;' . $styleModifier1 . '">';
-                        echo '<thead><tr><th class="wpscst_results_posted_by" style="' . $styleModifier2 . '">' . __('Posted by', 'wpsc-support-tickets') . ' <a href="' . get_admin_url() . 'user-edit.php?user_id=' . $resultsX['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=wpscSupportTickets-admin') . '">' . $theusersname . '</a> (<span class="wpscst_results_timestamp">' . date('Y-m-d g:i A', $resultsX['timestamp']) . '</span>)<div style="float:right;"><a onclick="if(confirm(\'' . __('Are you sure you want to delete this reply?', 'wpsc-support-tickets') . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?replyid=' . $resultsX['primkey'] . '&ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" /> ' . __('Delete Reply', 'wpsc-support-tickets') . '</a></div></th></tr></thead>';
+                        echo '<thead><tr><th class="wpscst_results_posted_by" style="' . $styleModifier2 . '">' . __('Posted by', 'wpsc-support-tickets') . ' <a href="' . get_admin_url() . 'user-edit.php?user_id=' . $resultsX['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=EmailSupportTickets-admin') . '">' . $theusersname . '</a> (<span class="wpscst_results_timestamp">' . date('Y-m-d g:i A', $resultsX['timestamp']) . '</span>)<div style="float:right;"><a onclick="if(confirm(\'' . __('Are you sure you want to delete this reply?', 'wpsc-support-tickets') . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?replyid=' . $resultsX['primkey'] . '&ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" /> ' . __('Delete Reply', 'wpsc-support-tickets') . '</a></div></th></tr></thead>';
                         $messageData = strip_tags(base64_decode($resultsX['message']), '<p><br><a><br><strong><b><u><ul><li><strike><sub><sup><img><font>');
                         $messageData = explode('\\', $messageData);
                         $messageWhole = '';
@@ -561,7 +546,7 @@ if (!class_exists("wpscSupportTickets")) {
                 $output .= '<div style="float:left;margin-left:20px;"><h3>' . __('Attach a file', 'wpsc-support-tickets') . '</h3> <input type="file" name="wpscst_file" id="wpscst_file"></div>';
             }
             $output .='         
-                        <button class="button-secondary" onclick="if(confirm(\'' . __('Are you sure you want to cancel?', 'wpsc-support-tickets') . '\')){window.location = \'' . get_admin_url() . 'admin.php?page=wpscSupportTickets-admin\';}return false;"  style="float:right;" ><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'wpsc-support-tickets') . '" /> ' . __('Cancel', 'wpsc-support-tickets') . '</button> <button class="button-primary" type="submit" name="wpscst_submit" id="wpscst_submit" style="float:right;margin:0 5px 0 5px;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Update Ticket', 'wpsc-support-tickets') . '" /> ' . __('Update Ticket', 'wpsc-support-tickets') . '</button></td></tr>';
+                        <button class="button-secondary" onclick="if(confirm(\'' . __('Are you sure you want to cancel?', 'wpsc-support-tickets') . '\')){window.location = \'' . get_admin_url() . 'admin.php?page=EmailSupportTickets-admin\';}return false;"  style="float:right;" ><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'wpsc-support-tickets') . '" /> ' . __('Cancel', 'wpsc-support-tickets') . '</button> <button class="button-primary" type="submit" name="wpscst_submit" id="wpscst_submit" style="float:right;margin:0 5px 0 5px;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Update Ticket', 'wpsc-support-tickets') . '" /> ' . __('Update Ticket', 'wpsc-support-tickets') . '</button></td></tr>';
 
 
             $output .= '</table></form>';
@@ -572,7 +557,7 @@ if (!class_exists("wpscSupportTickets")) {
         }
 
         // Dashboard widget code=======================================================================
-        function wpscSupportTickets_main_dashboard_widget_function() {
+        function EmailSupportTickets_main_dashboard_widget_function() {
             global $wpdb;
 
             $devOptions = $this->getAdminOptions();
@@ -591,16 +576,16 @@ if (!class_exists("wpscSupportTickets")) {
                         $theusersname = __('Guest', 'wpsc-support-tickets');
                     }
                     if (trim($result['last_staff_reply']) == '') {
-                        $last_staff_reply = __('ticket creator', 'wpsc-support-tickets') . ' <a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=wpscSupportTickets-admin') . '">' . $theusersname . '</a>';
+                        $last_staff_reply = __('ticket creator', 'wpsc-support-tickets') . ' <a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=EmailSupportTickets-admin') . '">' . $theusersname . '</a>';
                     } else {
                         if ($result['last_updated'] > $result['last_staff_reply']) {
-                            $last_staff_reply = __('ticket creator', 'wpsc-support-tickets') . ' <a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=wpscSupportTickets-admin') . '">' . $theusersname . '</a>';
+                            $last_staff_reply = __('ticket creator', 'wpsc-support-tickets') . ' <a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=EmailSupportTickets-admin') . '">' . $theusersname . '</a>';
                         } else {
                             $last_staff_reply = '<strong>' . __('Staff Member', 'wpsc-support-tickets') . '</strong>';
                         }
                     }
 
-                    $output .= '<tr><td><a href="admin.php?page=wpscSupportTickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'wpsc-support-tickets') . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td>' . $last_staff_reply . '</td></tr>';
+                    $output .= '<tr><td><a href="admin.php?page=EmailSupportTickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'wpsc-support-tickets') . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td>' . $last_staff_reply . '</td></tr>';
                 }
                 $output .= '</tbody></table>';
             } else {
@@ -610,9 +595,9 @@ if (!class_exists("wpscSupportTickets")) {
         }
 
         // Create the function use in the action hook
-        function wpscSupportTickets_main_add_dashboard_widgets() {
+        function EmailSupportTickets_main_add_dashboard_widgets() {
             if (function_exists('current_user_can') && current_user_can('manage_wpsc_support_tickets')) {
-                wp_add_dashboard_widget('wpscSupportTickets_main_dashboard_widgets', __('wpscSupportTickets Overview', 'wpsc-support-tickets'), array(&$this, 'wpscSupportTickets_main_dashboard_widget_function'));
+                wp_add_dashboard_widget('EmailSupportTickets_main_dashboard_widgets', __('EmailSupportTickets Overview', 'wpsc-support-tickets'), array(&$this, 'EmailSupportTickets_main_dashboard_widget_function'));
             }
         }
 
@@ -640,9 +625,9 @@ if (!class_exists("wpscSupportTickets")) {
         }        
 
         // Installation ==============================================================================================		
-        function wpscSupportTickets_install() {
+        function EmailSupportTickets_install() {
             global $wpdb;
-            global $wpscSupportTickets_db_version;
+            global $EmailSupportTickets_db_version;
 
             $table_name = $wpdb->prefix . "wpscst_tickets";
             if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
@@ -701,12 +686,12 @@ if (!class_exists("wpscSupportTickets")) {
                 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
                 dbDelta($sql);
             }
-            add_option("wpscSupportTickets_db_version", $wpscSupportTickets_db_version);
+            add_option("EmailSupportTickets_db_version", $EmailSupportTickets_db_version);
         }
 
         // END Installation ==============================================================================================
         // Shortcode =========================================
-        function wpscSupportTickets_mainshortcode($atts) {
+        function EmailSupportTickets_mainshortcode($atts) {
             global $wpdb;
 
             $table_name = $wpdb->prefix . "wpscst_tickets";
@@ -956,7 +941,7 @@ if (!class_exists("wpscSupportTickets")) {
 
     /**
      * ===============================================================================================================
-     * End Main wpscSupportTickets Class
+     * End Main EmailSupportTickets Class
      */
 }
 // The end of the IF statement
@@ -974,19 +959,19 @@ if (!class_exists("wpscSupportTickets")) {
  * ===============================================================================================================
  * Initialize the admin panel
  */
-if (!function_exists("wpscSupportTicketsAdminPanel")) {
+if (!function_exists("EmailSupportTicketsAdminPanel")) {
 
-    function wpscSupportTicketsAdminPanel() {
-        global $wpscSupportTickets;
-        if (!isset($wpscSupportTickets)) {
+    function EmailSupportTicketsAdminPanel() {
+        global $EmailSupportTickets;
+        if (!isset($EmailSupportTickets)) {
             return;
         }
         if (function_exists('add_menu_page')) {
-            add_menu_page(__('wpsc Support Tickets', 'wpsc-support-tickets'), __('Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-admin', array(&$wpscSupportTickets, 'printAdminPage'), plugin_dir_url( __FILE__ ) . '/images/controller.png');
-            $settingsPage = add_submenu_page('wpscSupportTickets-admin', __('Settings', 'wpsc-support-tickets'), __('Settings', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-settings', array(&$wpscSupportTickets, 'printAdminPageSettings'));
-            $editPage = add_submenu_page(NULL, __('Reply to Support Ticket', 'wpsc-support-tickets'), __('Reply to Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'wpscSupportTickets-edit', array(&$wpscSupportTickets, 'printAdminPageEdit'));
-            add_action("admin_print_scripts-$editPage", array(&$wpscSupportTickets, 'addHeaderCode'));
-            add_action("admin_print_scripts-$settingsPage", array(&$wpscSupportTickets, 'addHeaderCode'));            
+            add_menu_page(__('wpsc Support Tickets', 'wpsc-support-tickets'), __('Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'EmailSupportTickets-admin', array(&$EmailSupportTickets, 'printAdminPage'), plugin_dir_url( __FILE__ ) . '/images/controller.png');
+            $settingsPage = add_submenu_page('EmailSupportTickets-admin', __('Settings', 'wpsc-support-tickets'), __('Settings', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'EmailSupportTickets-settings', array(&$EmailSupportTickets, 'printAdminPageSettings'));
+            $editPage = add_submenu_page(NULL, __('Reply to Support Ticket', 'wpsc-support-tickets'), __('Reply to Support Tickets', 'wpsc-support-tickets'), 'manage_wpsc_support_tickets', 'EmailSupportTickets-edit', array(&$EmailSupportTickets, 'printAdminPageEdit'));
+            add_action("admin_print_scripts-$editPage", array(&$EmailSupportTickets, 'addHeaderCode'));
+            add_action("admin_print_scripts-$settingsPage", array(&$EmailSupportTickets, 'addHeaderCode'));            
         }
     }
 
@@ -1011,22 +996,22 @@ function wpscLoadInit() {
  * ===============================================================================================================
  * Call everything
  */
-if (class_exists("wpscSupportTickets")) {
-    $wpscSupportTickets = new wpscSupportTickets();
+if (class_exists("EmailSupportTickets")) {
+    $EmailSupportTickets = new EmailSupportTickets();
 }
 
 //Actions and Filters   
-if (isset($wpscSupportTickets)) {
+if (isset($EmailSupportTickets)) {
     //Actions
 
 
-    register_activation_hook(__FILE__, array(&$wpscSupportTickets, 'wpscSupportTickets_install')); // Install DB schema
-    add_action('wpsc-support-tickets/wpscSupportTickets.php', array(&$wpscSupportTickets, 'init')); // Create options on activation // @test
+    register_activation_hook(__FILE__, array(&$EmailSupportTickets, 'EmailSupportTickets_install')); // Install DB schema
+    add_action('wpsc-support-tickets/EmailSupportTickets.php', array(&$EmailSupportTickets, 'init')); // Create options on activation // @test
 
-    add_action('admin_menu', 'wpscSupportTicketsAdminPanel'); // Create admin panel
-    add_action('wp_dashboard_setup', array(&$wpscSupportTickets, 'wpscSupportTickets_main_add_dashboard_widgets')); // Dashboard widget
-    //add_action('wp_head', array(&$wpscSupportTickets, 'addHeaderCode')); // Place wpscSupportTickets comment into header
-    add_shortcode('wpscSupportTickets', array(&$wpscSupportTickets, 'wpscSupportTickets_mainshortcode'));
-    add_action("wp_print_scripts", array(&$wpscSupportTickets, "addHeaderCode"));
+    add_action('admin_menu', 'EmailSupportTicketsAdminPanel'); // Create admin panel
+    add_action('wp_dashboard_setup', array(&$EmailSupportTickets, 'EmailSupportTickets_main_add_dashboard_widgets')); // Dashboard widget
+    //add_action('wp_head', array(&$EmailSupportTickets, 'addHeaderCode')); // Place EmailSupportTickets comment into header
+    add_shortcode('EmailSupportTickets', array(&$EmailSupportTickets, 'EmailSupportTickets_mainshortcode'));
+    add_action("wp_print_scripts", array(&$EmailSupportTickets, "addHeaderCode"));
     add_action('init', 'wpscLoadInit'); // Load other languages, and javascript
 }

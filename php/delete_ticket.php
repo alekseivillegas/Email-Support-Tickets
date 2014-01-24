@@ -8,7 +8,7 @@ if (!function_exists('add_action'))
     require_once("../../../../wp-config.php");
 }
 
-global $current_user, $wpdb, $wpscSupportTickets;
+global $current_user, $wpdb, $EmailSupportTickets;
 
 if(is_user_logged_in()) {
     if ( function_exists('current_user_can') && !current_user_can('manage_wpsc_support_tickets')) {
@@ -21,7 +21,7 @@ if(is_user_logged_in()) {
         $wpdb->query("DELETE FROM `{$wpdb->prefix}wpscst_tickets` WHERE `primkey`='{$primkey}';");
         $wpdb->query("DELETE FROM `{$wpdb->prefix}wpscst_replies` WHERE `ticket_id`='{$primkey}';");
         header("HTTP/1.1 301 Moved Permanently");
-        header ('Location: '.get_admin_url().'admin.php?page=wpscSupportTickets-admin');
+        header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-admin');
         exit();
     }
      if(@isset($_GET['replyid']) && @is_numeric($_GET['replyid']) && @isset($_GET['ticketid']) && @is_numeric($_GET['ticketid'])) {
@@ -30,7 +30,7 @@ if(is_user_logged_in()) {
 
         $wpdb->query("DELETE FROM `{$wpdb->prefix}wpscst_replies` WHERE `primkey`='{$primkey}';");
         header("HTTP/1.1 301 Moved Permanently");
-        header ('Location: '.get_admin_url().'admin.php?page=wpscSupportTickets-edit&primkey='.$ticketprimkey);
+        header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$ticketprimkey);
         exit();
     }
 

@@ -14,7 +14,7 @@ if (session_id() == "") {@session_start();};
 
 if((is_user_logged_in() || @isset($_SESSION['wpsc_email'])) && is_numeric($_POST['primkey'])) {
     
-    $devOptions = get_option('wpscSupportTicketsAdminOptions');
+    $devOptions = get_option('EmailSupportTicketsAdminOptions');
     
     // Guest additions here
     if(is_user_logged_in()) {
