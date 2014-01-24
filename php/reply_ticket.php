@@ -113,7 +113,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 
                 // Settings
                         $wpsc_wordpress_upload_dir = wp_upload_dir();
-                        $save_path = $wpsc_wordpress_upload_dir['basedir']. '/wpsc-support-tickets/';
+                        $save_path = $wpsc_wordpress_upload_dir['basedir']. '/email-support-tickets/';
                         if(!is_dir($save_path)) {
                                 @mkdir($save_path);
                         }                
@@ -169,7 +169,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                                 $wpscst_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
                             }
                             $wpscst_message .= '>';
-                            $wpscst_message .= '<img src="'.plugins_url().'/wpsc-support-tickets-pro/images/attachment.png" alt="" /> <strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'</a></p>';
+                            $wpscst_message .= '<strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'</a></p>';
                         }       
             }        
         

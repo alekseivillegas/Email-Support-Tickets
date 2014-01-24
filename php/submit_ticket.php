@@ -65,7 +65,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
 		}
 	// Settings
                 $wpsc_wordpress_upload_dir = wp_upload_dir();
-		$save_path = $wpsc_wordpress_upload_dir['basedir']. '/wpsc-support-tickets/';
+		$save_path = $wpsc_wordpress_upload_dir['basedir']. '/email-support-tickets/';
                 if(!is_dir($save_path)) {
                         @mkdir($save_path);
                 }                
@@ -97,18 +97,18 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
 	// Validate the file size (Warning: the largest files supported by this code is 2GB)
 		$file_size = @filesize($_FILES[$upload_name]["tmp_name"]);
 		if (!$file_size || $file_size > $max_file_size_in_bytes) {
-			HandleError(__("File exceeds the maximum allowed size", 'email-support-tickets' ));
+			HandleError( __( 'File exceeds the maximum allowed size', 'email-support-tickets' ) );
 		}
 		if ($file_size <= 0) {
-			HandleError(__("File size outside allowed lower bound", 'email-support-tickets' ));
+			HandleError( __( 'File size outside allowed lower bound', 'email-support-tickets' ) );
 		}
 	// Validate file name (for our purposes we'll just remove invalid characters)
 		$file_name = preg_replace('/[^'.$valid_chars_regex.']|\.+$/i', "", basename($_FILES[$upload_name]['name']));
 		if (strlen($file_name) == 0 || strlen($file_name) > $MAX_FILENAME_LENGTH) {
-			HandleError(__("Invalid file name", 'email-support-tickets' ));
+			HandleError( __( 'Invalid file name', 'email-support-tickets' ) );
 		}
 		if (!@move_uploaded_file($_FILES[$upload_name]["tmp_name"], $save_path.$file_name)) {
-			HandleError(__("File could not be saved.", 'email-support-tickets' ));
+			HandleError( __( 'File could not be saved.', 'email-support-tickets' ) );
 		} else {
                     // SUCCESS
                    $emailst_initial_message .= '<br /><p class="wpsc-support-ticket-attachment"';
@@ -116,7 +116,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
                         $emailst_initial_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
                     }
                     $emailst_initial_message .= '>';
-                    $emailst_initial_message .= '<img src="'.plugins_url().'/wpsc-support-tickets-pro/images/attachment.png" alt="" /> <strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/wpsc-support-tickets/'.$file_name.'</a></p>';
+                    $emailst_initial_message .= '<strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'</a></p>';
 	       }       
     }    
     $emailst_title = base64_encode(strip_tags($_POST['emailst_title']));

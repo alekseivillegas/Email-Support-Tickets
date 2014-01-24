@@ -1,4 +1,4 @@
-    jQuery(document).ready(function(){
+jQuery(document).ready(function(){
         if(jQuery('.wpscst-table').length != 0) {
             try {
                 if(jQuery('#wpscst_nic_panel').length > 0) {
@@ -62,11 +62,11 @@
         }
     }
 
-    function cancelAdd() {
-        if(jQuery('.wpscst-table').length != 0) {
+	function cancelAdd() {
+		if(jQuery('.wpscst-table').length != 0) {
             jQuery("#wpscst_edit_div").fadeIn("slow");
             jQuery("#wpscst-new").fadeIn("slow");
             jQuery(".wpscst-table").fadeOut("slow");
             jQuery("html, body").animate({scrollTop: jQuery("#wpscst_top_page").offset().top}, 2000);
-        }
-    }
+	}
+}
