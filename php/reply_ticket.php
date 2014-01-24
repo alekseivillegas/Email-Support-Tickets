@@ -32,9 +32,9 @@ if( @isset( $_POST['emailst_set_status'] ) && $devOptions['allow_closing_ticket'
 
 // Next we return users & admins to the last page if they submitted a blank reply
 
-$string = trim(strip_tags(str_replace(chr(173), "", $_POST['wpscst_reply'])));
+$string = trim(strip_tags(str_replace(chr(173), "", $_POST['email_st_reply'])));
 if($string=='') { // No blank replies allowed
-    if($_POST['wpscst_goback']=='yes' && is_numeric($_POST['emailst_edit_primkey']) ) {
+    if($_POST['emailst_goback']=='yes' && is_numeric($_POST['emailst_edit_primkey']) ) {
         header("HTTP/1.1 301 Moved Permanently");
         header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$_POST['emailst_edit_primkey']);
     } else {
@@ -78,8 +78,8 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 
     if(isset($results[0])) {
        
-           $wpscst_message = '';
-            if($devOptions['allow_uploads']=='true' && @isset($_FILES["wpscst_file"]) && @$_FILES["wpscst_file"]["error"] != 4 ) {// @test if uploads work
+           $emailst_message = '';
+            if($devOptions['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {// @test if uploads work
 
                 /* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 
@@ -117,7 +117,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                         if(!is_dir($save_path)) {
                                 @mkdir($save_path);
                         }                
-                        $upload_name = "wpscst_file";
+                        $upload_name = "emailst_file";
                         $max_file_size_in_bytes = 2147483647;				// 2GB in bytes
                         $valid_chars_regex = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-';				// Characters allowed in the file name (in a Regular Expression format)
 
@@ -164,16 +164,16 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                                 HandleError(__("File could not be saved.", 'email-support-tickets' ));
                         } else {
                             // SUCCESS
-                            $wpscst_message .= '<br /><p class="wpsc-support-ticket-attachment"';
+                            $emailst_message .= '<br /><p class="wpsc-support-ticket-attachment"';
                             if($devOptions['disable_inline_styles']=='false'){
-                                $wpscst_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
+                                $emailst_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
                             }
-                            $wpscst_message .= '>';
-                            $wpscst_message .= '<strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'</a></p>';
+                            $emailst_message .= '>';
+                            $emailst_message .= '<strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'</a></p>';
                         }       
             }        
         
-            $wpscst_message = base64_encode($_POST['wpscst_reply'] . $wpscst_message);
+            $emailst_message = base64_encode($_POST['email_st_reply'] . $emailst_message);
             $sql = "
             INSERT INTO `{$wpdb->prefix}emailst_replies` (
                 `primkey` ,
@@ -183,7 +183,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                 `message`
             )
             VALUES (
-                NULL , '{$primkey}', '{$emailst_userid}', '".current_time( 'timestamp' )."', '{$wpscst_message}'
+                NULL , '{$primkey}', '{$emailst_userid}', '".current_time( 'timestamp' )."', '{$emailst_message}'
             );
             ";
            $wpdb->query($sql);
@@ -191,7 +191,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 		unset($isa_staff_reply); // @isa
 
             // Update the Last Updated time stamp
-            if($_POST['wpscst_is_staff_reply']=='yes' && current_user_can('manage_wpsc_support_tickets')) {
+            if($_POST['emailst_is_staff_reply']=='yes' && current_user_can('manage_wpsc_support_tickets')) {
                     // This is a staff reply from the admin panel
                     $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `last_staff_reply` = '".time()."' WHERE `primkey` ='{$primkey}';";
 
@@ -208,7 +208,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 			$to      = $results[0]['email']; // Send this to the original ticket creator
 			$subject = $devOptions['email_new_reply_subject'];
 			$message = $devOptions['email_new_reply_body'] . '<br /><br />Here is the reply:<br /><br />' .
-					stripslashes_deep(base64_decode($wpscst_message)).
+					stripslashes_deep(base64_decode($emailst_message)).
 					'<br /><br />See the entire support ticket and give your reply at:<br /><a href="' .
 					get_permalink($devOptions['mainpage']) . '">' .
 					get_permalink($devOptions['mainpage']) . '</a><br /><br />';
@@ -229,7 +229,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                 $to      = $devOptions['email']; // Send this to the admin
                 $subject = __("Reply to a support ticket was received.", 'email-support-tickets' );
                 $message = __( 'There is a new reply on support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$primkey.'';
-			$message .= '<br /><br />Here is the reply:<br /><br />' . stripslashes_deep(base64_decode($wpscst_message));// @test isa
+			$message .= '<br /><br />Here is the reply:<br /><br />' . stripslashes_deep(base64_decode($emailst_message));// @test isa
                 $headers = '';
                     $headers .= 'MIME-Version: 1.0' . "\r\n";
                     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                
@@ -242,7 +242,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     }
 }
 
-if($_POST['wpscst_goback']=='yes') {
+if($_POST['emailst_goback']=='yes') {
     header("HTTP/1.1 301 Moved Permanently");
     header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$primkey);
 } else {

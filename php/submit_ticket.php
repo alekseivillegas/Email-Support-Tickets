@@ -41,7 +41,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
     }
 
     $emailst_initial_message = '';
-    if($devOptions['allow_uploads']=='true' && @isset($_FILES["wpscst_file"]) && @$_FILES["wpscst_file"]["error"] != 4 ) {
+    if($devOptions['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {
 	/* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 	will have to check for any error messages and react as needed. */
 	function HandleError($message) {
@@ -69,7 +69,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
                 if(!is_dir($save_path)) {
                         @mkdir($save_path);
                 }                
-		$upload_name = "wpscst_file";
+		$upload_name = "emailst_file";
 		$max_file_size_in_bytes = 2147483647;				// 2GB in bytes
 		$valid_chars_regex = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-';				// Characters allowed in the file name (in a Regular Expression format)
 	// Other variables	
