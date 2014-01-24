@@ -24,7 +24,7 @@ Email Support Tickets is a support ticket system for WordPress that also sends t
 
  * Users can create support tickets and reply to their own tickets.
  * Guests can use tickets as well, using just their email address. Disabled by default.
- * Admins, and any user granted the manage_wpsc_support_tickets capability, can reply to, close, or delete any ticket.
+ * Admins, and any user granted the manage_emailst_support_tickets capability, can reply to, close, or delete any ticket.
  * Front end support ticket interface is done in jQuery, and utilizes Ajax ticket loading.
  * Customizable departments, email messages, and CSS for custom solutions.
  * Admin dashboard widget shows all open tickets
@@ -33,9 +33,7 @@ Email Support Tickets is a support ticket system for WordPress that also sends t
 
 == Installation ==
 
-The recommended way to install wpsc Support Tickets is to go into the Wordpress admin panel, and click on Add New under the 
-Plugins menu.  Search for wpsc Support Tickets, and then click on Install, then click Install Now.  Once the installation 
-completes, Activate the plugin
+The recommended way to install Email Support Tickets is to go into the Wordpress admin panel, and click on Add New under the Plugins menu.  Search for Email Support Tickets, and then click on Install, then click Install Now.  Once the installation completes, Activate the plugin
 
 Or, if you want to install manually:
 

@@ -11,7 +11,7 @@ global $current_user, $wpdb, $EmailSupportTickets;
 $devOptions = $EmailSupportTickets->getAdminOptions();
 if (session_id() == "") {@session_start();};
 
-if ( current_user_can('manage_wpsc_support_tickets')) { // admin edits such as closing tickets should happen here first:
+if ( current_user_can('manage_emailst_support_tickets')) { // admin edits such as closing tickets should happen here first:
     if(@isset($_POST['emailst_status']) && @isset($_POST['emailst_department']) && is_numeric($_POST['emailst_edit_primkey'])) {
         $emailst_department = base64_encode(strip_tags($_POST['emailst_department']));
         $emailst_status = $wpdb->escape($_POST['emailst_status']);
@@ -36,7 +36,7 @@ $string = trim(strip_tags(str_replace(chr(173), "", $_POST['email_st_reply'])));
 if($string=='') { // No blank replies allowed
     if($_POST['emailst_goback']=='yes' && is_numeric($_POST['emailst_edit_primkey']) ) {
         header("HTTP/1.1 301 Moved Permanently");
-        header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$_POST['emailst_edit_primkey']);
+        header ('Location: '.get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$_POST['emailst_edit_primkey']);
     } else {
         header("HTTP/1.1 301 Moved Permanently");
         header ('Location: '.get_permalink($devOptions['mainpage']));
@@ -60,7 +60,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     }    
     
     $primkey = intval($_POST['emailst_edit_primkey']);
-    if ( !current_user_can('manage_wpsc_support_tickets')) {
+    if ( !current_user_can('manage_emailst_support_tickets')) {
 
        if($devOptions['allow_all_tickets_to_be_replied']=='true' && $devOptions['allow_all_tickets_to_be_viewed']=='true') {
            $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
@@ -191,7 +191,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 		unset($isa_staff_reply); // @isa
 
             // Update the Last Updated time stamp
-            if($_POST['emailst_is_staff_reply']=='yes' && current_user_can('manage_wpsc_support_tickets')) {
+            if($_POST['emailst_is_staff_reply']=='yes' && current_user_can('manage_emailst_support_tickets')) {
                     // This is a staff reply from the admin panel
                     $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `last_staff_reply` = '".time()."' WHERE `primkey` ='{$primkey}';";
 
@@ -228,7 +228,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 
                 $to      = $devOptions['email']; // Send this to the admin
                 $subject = __("Reply to a support ticket was received.", 'email-support-tickets' );
-                $message = __( 'There is a new reply on support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$primkey.'';
+                $message = __( 'There is a new reply on support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$primkey.'';
 			$message .= '<br /><br />Here is the reply:<br /><br />' . stripslashes_deep(base64_decode($emailst_message));// @test isa
                 $headers = '';
                     $headers .= 'MIME-Version: 1.0' . "\r\n";
@@ -244,7 +244,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 
 if($_POST['emailst_goback']=='yes') {
     header("HTTP/1.1 301 Moved Permanently");
-    header ('Location: '.get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$primkey);
+    header ('Location: '.get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$primkey);
 } else {
     header("HTTP/1.1 301 Moved Permanently");
     header ('Location: '.get_permalink($devOptions['mainpage']));

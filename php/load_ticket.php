@@ -65,7 +65,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                 if($results['user_id']!=0) {
                     @$user=get_userdata($results['user_id']);
                     @$userdata = new WP_User($results['user_id']);
-                    if ( $userdata->has_cap('manage_wpsc_support_tickets') ) {
+                    if ( $userdata->has_cap('manage_emailst_support_tickets') ) {
                         $classModifier1 = ' class="emailst_staff_reply_table" ';
                         $classModifier2 = ' class="emailst_staff_reply_thead" ';
                         $classModifier3 = ' class="emailst_staff_reply_tbody" ';

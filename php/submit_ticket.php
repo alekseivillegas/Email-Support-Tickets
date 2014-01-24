@@ -156,7 +156,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
     wp_mail($to, $subject, $message, $headers);
     $to      = $devOptions['email']; // Send this to the admin
     $subject = __("A new support ticket was received.", 'email-support-tickets' );
-    $message = __( 'There is a new support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=EmailSupportTickets-edit&primkey='.$lastID;
+    $message = __( 'There is a new support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$lastID;
 	$message .= '<br /><br />Here is the initial message:<br /><br />' . stripslashes_deep(base64_decode($emailst_initial_message));// @test isa
     $headers = '';
         $headers .= 'MIME-Version: 1.0' . "\r\n";
