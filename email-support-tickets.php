@@ -3,7 +3,7 @@
 Plugin Name: Email Support Tickets
 Plugin URI: https://github.com/isabelc/Email-Support-Tickets
 Description: Support Ticket system that also sends message body via email.
-Version: 0.0.2
+Version: 0.0.3
 Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
@@ -200,7 +200,7 @@ if (!class_exists("Email_Support_Tickets")) {
 
 			<h2><?php _e( 'Settings', 'email-support-tickets' ); ?></h2>
 			<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-			<p><strong><?php _e('Main Page', 'email-support-tickets' ); ?>:</strong><?php e_( 'You need to use a Page as the base for Email Support Tickets.', 'email-support-tickets' ); ?><br />
+			<p><strong><?php _e('Main Page', 'email-support-tickets' ); ?>:</strong><?php _e( 'You need to use a Page as the base for Email Support Tickets.', 'email-support-tickets' ); ?><br />
 			<select name="EmailSupportTicketsmainpage">
 			<option value="">
 			<?php attribute_escape( __( 'Select page', 'email-support-tickets' ) ); ?>
@@ -255,7 +255,7 @@ if (!class_exists("Email_Support_Tickets")) {
                 
 			</select>
 
-			<p><strong><?php e_( 'Allow Guests', 'email-support-tickets' ); ?>:</strong><?php e_( 'Set this to true if you want Guests to be able to use the support ticket system.', 'email-support-tickets' ); ?><br />
+			<p><strong><?php _e( 'Allow Guests', 'email-support-tickets' ); ?>:</strong><?php _e( 'Set this to true if you want Guests to be able to use the support ticket system.', 'email-support-tickets' ); ?><br />
                 <select name="allow_guests">
 			<?php 
 			$pagesY[0] = 'true';
@@ -783,7 +783,7 @@ if (!class_exists("Email_Support_Tickets")) {
 
                             $output .= '<button class="emailst-button" ';
                             if ($email_st_options['disable_inline_styles'] == 'false') {
-                                $output.='style="float:right;"';
+                                $output.='style="float:right;margin-left:8px;"';
                             } $output.=' onclick="cancelEdit();return false;"><img src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" ';
                             if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
@@ -821,10 +821,15 @@ if (!class_exists("Email_Support_Tickets")) {
                             $results = $wpdb->get_results($sql, ARRAY_A);
                             if (isset($results) && isset($results[0]['primkey'])) {
                                 $output .= '<h3>' . __('View Previous Tickets:', 'email-support-tickets' ) . '</h3>';
-                                $output .= '<table class="widefat" ';
+                                $output .= '<table class="widefat emailst-previous-tickets" ';
                                 if ($email_st_options['disable_inline_styles'] == 'false') {
                                     $output.='style="width:100%"';
-                                }$output.='><tr><th>' . __('Ticket', 'email-support-tickets' ) . '</th><th>' . __('Status', 'email-support-tickets' ) . '</th><th>' . __('Last Reply', 'email-support-tickets' ) . '</th></tr>';
+                                }$output .= '><tr><th>' . __('Ticket', 'email-support-tickets' ) . '</th><th';
+
+							if ($email_st_options['disable_inline_styles'] == 'false') {
+								$output.=' style="white-space: nowrap"';
+							}
+							$output .= '>' . __('Status', 'email-support-tickets' ) . '</th><th>' . __('Last Reply', 'email-support-tickets' ) . '</th></tr>';
                                 foreach ($results as $result) {
                                     if (trim($result['last_staff_reply']) == '') {
                                         if ($email_st_options['allow_all_tickets_to_be_viewed'] == 'false') {
