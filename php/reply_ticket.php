@@ -8,7 +8,7 @@ if (!function_exists('add_action'))
     require_once("../../../../wp-config.php");
 }
 global $current_user, $wpdb, $Email_Support_Tickets;
-$devOptions = $Email_Support_Tickets->get_admin_options();
+$email_st_options = $Email_Support_Tickets->get_admin_options();
 if (session_id() == "") {@session_start();};
 
 if ( current_user_can('manage_emailst_support_tickets')) { // admin edits such as closing tickets should happen here first:
@@ -23,7 +23,7 @@ if ( current_user_can('manage_emailst_support_tickets')) { // admin edits such a
 }
 
 // Update the status if applicable
-if( @isset( $_POST['emailst_set_status'] ) && $devOptions['allow_closing_ticket']=='true' ) {
+if( @isset( $_POST['emailst_set_status'] ) && $email_st_options['allow_closing_ticket']=='true' ) {
     $primkey = intval($_POST['emailst_edit_primkey']);
     $emailst_set_status = esc_sql($_POST['emailst_set_status']);
     $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `resolution`='{$emailst_set_status}' WHERE `primkey` ='{$primkey}';";
@@ -39,7 +39,7 @@ if($string=='') { // No blank replies allowed
         header ('Location: '.get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$_POST['emailst_edit_primkey']);
     } else {
         header("HTTP/1.1 301 Moved Permanently");
-        header ('Location: '.get_permalink($devOptions['mainpage']));
+        header ('Location: '.get_permalink($email_st_options['mainpage']));
     }
     exit();
 }
@@ -62,11 +62,11 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     $primkey = intval($_POST['emailst_edit_primkey']);
     if ( !current_user_can('manage_emailst_support_tickets')) {
 
-       if($devOptions['allow_all_tickets_to_be_replied']=='true' && $devOptions['allow_all_tickets_to_be_viewed']=='true') {
+       if($email_st_options['allow_all_tickets_to_be_replied']=='true' && $email_st_options['allow_all_tickets_to_be_viewed']=='true') {
            $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
         }                                                
 
-       if($devOptions['allow_all_tickets_to_be_replied']=='false' || $devOptions['allow_all_tickets_to_be_viewed']=='false') {
+       if($email_st_options['allow_all_tickets_to_be_replied']=='false' || $email_st_options['allow_all_tickets_to_be_viewed']=='false') {
 
            $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' AND `user_id`='{$emailst_userid}' AND `email`='{$emailst_email}' LIMIT 0, 1;";
         }        
@@ -79,7 +79,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     if(isset($results[0])) {
        
            $emailst_message = '';
-            if($devOptions['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {// @test if uploads work
+            if($email_st_options['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {// @test if uploads work
 
                 /* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 
@@ -165,7 +165,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                         } else {
                             // SUCCESS
                             $emailst_message .= '<br /><p class="emailst-support-ticket-attachment"';
-                            if($devOptions['disable_inline_styles']=='false'){
+                            if($email_st_options['disable_inline_styles']=='false'){
                                 $emailst_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
                             }
                             $emailst_message .= '>';
@@ -206,17 +206,17 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 		if( 'true' == $isa_staff_reply ) { // @isa only send email to ticket creator if reply is from admin
 
 			$to      = $results[0]['email']; // Send this to the original ticket creator
-			$subject = $devOptions['email_new_reply_subject'];
-			$message = $devOptions['email_new_reply_body'] . '<br /><br />Here is the reply:<br /><br />' .
+			$subject = $email_st_options['email_new_reply_subject'];
+			$message = $email_st_options['email_new_reply_body'] . '<br /><br />Here is the reply:<br /><br />' .
 					stripslashes_deep(base64_decode($emailst_message)).
 					'<br /><br />See the entire support ticket and give your reply at:<br /><a href="' .
-					get_permalink($devOptions['mainpage']) . '">' .
-					get_permalink($devOptions['mainpage']) . '</a><br /><br />';
+					get_permalink($email_st_options['mainpage']) . '">' .
+					get_permalink($email_st_options['mainpage']) . '</a><br /><br />';
 			$headers = '';
 				$headers .= 'MIME-Version: 1.0' . "\r\n";
 				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                
-			$headers .= 'From: ' . $devOptions['email'] . "\r\n" .
-			'Reply-To: ' . $devOptions['email'] .  "\r\n" .
+			$headers .= 'From: ' . $email_st_options['email'] . "\r\n" .
+			'Reply-To: ' . $email_st_options['email'] .  "\r\n" .
 			'X-Mailer: PHP/' . phpversion();
 			@mail($to, $subject, $message, $headers);
 	
@@ -224,17 +224,17 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 
 			// not a staff reply, so send email to admin @isa
 
-           if($devOptions['email']!=$results[0]['email']) {
+           if($email_st_options['email']!=$results[0]['email']) {
 
-                $to      = $devOptions['email']; // Send this to the admin
+                $to      = $email_st_options['email']; // Send this to the admin
                 $subject = __("Reply to a support ticket was received.", 'email-support-tickets' );
                 $message = __( 'There is a new reply on support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$primkey.'';
 			$message .= '<br /><br />Here is the reply:<br /><br />' . stripslashes_deep(base64_decode($emailst_message));// @test isa
                 $headers = '';
                     $headers .= 'MIME-Version: 1.0' . "\r\n";
                     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                
-                $headers .= 'From: ' . $devOptions['email'] . "\r\n" .
-                'Reply-To: ' . $devOptions['email'] .  "\r\n" .
+                $headers .= 'From: ' . $email_st_options['email'] . "\r\n" .
+                'Reply-To: ' . $email_st_options['email'] .  "\r\n" .
                 'X-Mailer: PHP/' . phpversion();
                 @mail($to, $subject, $message, $headers);
             }
@@ -247,6 +247,6 @@ if($_POST['emailst_goback']=='yes') {
     header ('Location: '.get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$primkey);
 } else {
     header("HTTP/1.1 301 Moved Permanently");
-    header ('Location: '.get_permalink($devOptions['mainpage']));
+    header ('Location: '.get_permalink($email_st_options['mainpage']));
 }
 exit(); ?>

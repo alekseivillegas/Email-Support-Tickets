@@ -7,10 +7,10 @@ if (!function_exists('add_action')) {
     require_once("../../../../wp-config.php");
 }
 global $current_user, $wpdb, $Email_Support_Tickets;
-$devOptions = NULL;
-$devOptions = $Email_Support_Tickets->get_admin_options();
-if(!isset($devOptions['mainpage']) || $devOptions['mainpage']=='') {
-    $devOptions['mainpage'] = home_url();
+$email_st_options = NULL;
+$email_st_options = $Email_Support_Tickets->get_admin_options();
+if(!isset($email_st_options['mainpage']) || $email_st_options['mainpage']=='') {
+    $email_st_options['mainpage'] = home_url();
 }
 
 if (session_id() == "") {@session_start();};
@@ -18,12 +18,12 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
     if(trim($_POST['emailst_initial_message'])=='' || trim($_POST['emailst_title'])=='') {// No blank messages/titles allowed
             if(!headers_sent()) {
                 header("HTTP/1.1 301 Moved Permanently");
-                header ('Location: '.get_permalink($devOptions['mainpage']));
+                header ('Location: '.get_permalink($email_st_options['mainpage']));
                 exit();
             } else {
                 echo '<script type="text/javascript">
                         <!--
-                        window.location = "'.get_permalink($devOptions['mainpage']).'"
+                        window.location = "'.get_permalink($email_st_options['mainpage']).'"
                         //-->
                         </script>';
             }
@@ -41,7 +41,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
     }
 
     $emailst_initial_message = '';
-    if($devOptions['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {
+    if($email_st_options['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {
 	/* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 	will have to check for any error messages and react as needed. */
 	function HandleError($message) {
@@ -112,7 +112,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
 		} else {
                     // SUCCESS
                    $emailst_initial_message .= '<br /><p class="emailst-support-ticket-attachment"';
-                    if($devOptions['disable_inline_styles']=='false'){
+                    if($email_st_options['disable_inline_styles']=='false'){
                         $emailst_initial_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
                     }
                     $emailst_initial_message .= '>';
@@ -143,36 +143,36 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
     $wpdb->query($sql);
     $lastID = $wpdb->insert_id;
     $to      = $emailst_email; // Send this to the ticket creator
-    $subject = $devOptions['email_new_ticket_subject'];
-    $message = $devOptions['email_new_ticket_body'];
+    $subject = $email_st_options['email_new_ticket_subject'];
+    $message = $email_st_options['email_new_ticket_body'];
     $headers = '';
-    if($devOptions['allow_html']=='true') {
+    if($email_st_options['allow_html']=='true') {
         $headers .= 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                
     }    
-    $headers .= 'From: ' . $devOptions['email'] . "\r\n" .
-        'Reply-To: ' . $devOptions['email'] .  "\r\n" .
+    $headers .= 'From: ' . $email_st_options['email'] . "\r\n" .
+        'Reply-To: ' . $email_st_options['email'] .  "\r\n" .
         'X-Mailer: PHP/' . phpversion();
     wp_mail($to, $subject, $message, $headers);
-    $to      = $devOptions['email']; // Send this to the admin
+    $to      = $email_st_options['email']; // Send this to the admin
     $subject = __("A new support ticket was received.", 'email-support-tickets' );
     $message = __( 'There is a new support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$lastID;
 	$message .= '<br /><br />Here is the initial message:<br /><br />' . stripslashes_deep(base64_decode($emailst_initial_message));// @test isa
     $headers = '';
         $headers .= 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                
-    $headers .= 'From: ' . $devOptions['email'] . "\r\n" .
-    'Reply-To: ' . $devOptions['email'] .  "\r\n" .
+    $headers .= 'From: ' . $email_st_options['email'] . "\r\n" .
+    'Reply-To: ' . $email_st_options['email'] .  "\r\n" .
     'X-Mailer: PHP/' . phpversion();
     wp_mail($to, $subject, $message, $headers);
 }
 if(!headers_sent()) {
     header("HTTP/1.1 301 Moved Permanently");
-    header ('Location: '.get_permalink($devOptions['mainpage']));
+    header ('Location: '.get_permalink($email_st_options['mainpage']));
 } else {
     echo '<script type="text/javascript">
             <!--
-            window.location = "'.get_permalink($devOptions['mainpage']).'"
+            window.location = "'.get_permalink($email_st_options['mainpage']).'"
             //-->
             </script>';
 }

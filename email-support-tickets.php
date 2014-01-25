@@ -34,7 +34,7 @@ if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
 global $Email_Support_Tickets, $email_support_tickets_version, $email_support_tickets_db_version, $APjavascriptQueue, $emailst_error_reporting;
 $email_support_tickets_version = 1.0; // @todo update
 $email_support_tickets_db_version = 1.0; // @todo update
-$APjavascriptQueue = NULL;
+$APjavascriptQueue = NULL; // @todo ??
 $emailst_error_reporting = false;
 
 // Create the proper directory structure if it is not already created
@@ -103,7 +103,7 @@ if (!class_exists("Email_Support_Tickets")) {
 		//Returns an array of admin options
 		function get_admin_options() {
 
-			$apAdminOptions = array('mainpage' => '',
+			$ap_admin_options = array('mainpage' => '',
 				'turnon_EmailSupportTickets' => 'true',
 				'departments' => __('Support', 'email-support-tickets' ) . '||' . __('Billing', 'email-support-tickets' ),
 				'email' => get_bloginfo('admin_email'),
@@ -122,17 +122,17 @@ if (!class_exists("Email_Support_Tickets")) {
 			);
 
             if ($this->emailst_settings != NULL) {
-                $devOptions = $this->emailst_settings;
+                $email_st_options = $this->emailst_settings;
             } else {
-                $devOptions = get_option($this->admin_options_name);
+                $email_st_options = get_option($this->admin_options_name);
             }
-            if (!empty($devOptions)) {
-                foreach ($devOptions as $key => $option) {
-                    $apAdminOptions[$key] = $option;
+            if (!empty($email_st_options)) {
+                foreach ($email_st_options as $key => $option) {
+                    $ap_admin_options[$key] = $option;
                 }
             }
-            update_option($this->admin_options_name, $apAdminOptions);
-            return $apAdminOptions;
+            update_option($this->admin_options_name, $ap_admin_options);
+            return $ap_admin_options;
         }
 
 		function adminHeader() {
@@ -149,7 +149,7 @@ if (!class_exists("Email_Support_Tickets")) {
 
 			email_support_tickets_save_settings(); // Action hook for saving
 
-			$devOptions = $this->get_admin_options();
+			$email_st_options = $this->get_admin_options();
 
 			echo '<script type="text/javascript">jQuery(function() {setTimeout(function(){ jQuery(".updated").fadeOut(); },4000);});</script>'; ?>
 			<div class="wrap">
@@ -159,40 +159,40 @@ if (!class_exists("Email_Support_Tickets")) {
 			if (@isset($_POST['update_EmailSupportTicketsSettings'])) {
 
 				if (isset($_POST['EmailSupportTicketsmainpage'])) {
-					$devOptions['mainpage'] = esc_sql($_POST['EmailSupportTicketsmainpage']);
+					$email_st_options['mainpage'] = esc_sql($_POST['EmailSupportTicketsmainpage']);
 				}
 				if (isset($_POST['turnEmailSupportTicketsOn'])) {
-					$devOptions['turnon_EmailSupportTickets'] = esc_sql($_POST['turnEmailSupportTicketsOn']);
+					$email_st_options['turnon_EmailSupportTickets'] = esc_sql($_POST['turnEmailSupportTicketsOn']);
 				}
 				if (isset($_POST['departments'])) {
-					$devOptions['departments'] = esc_sql($_POST['departments']);
+					$email_st_options['departments'] = esc_sql($_POST['departments']);
 				}
 				if (isset($_POST['email'])) {
-					$devOptions['email'] = esc_sql($_POST['email']);
+					$email_st_options['email'] = esc_sql($_POST['email']);
 				}
 				if (isset($_POST['email_new_ticket_subject'])) {
-					$devOptions['email_new_ticket_subject'] = esc_sql($_POST['email_new_ticket_subject']);
+					$email_st_options['email_new_ticket_subject'] = esc_sql($_POST['email_new_ticket_subject']);
 				}
 				if (isset($_POST['email_new_ticket_body'])) {
-					$devOptions['email_new_ticket_body'] = stripslashes($_POST['email_new_ticket_body']);
+					$email_st_options['email_new_ticket_body'] = stripslashes($_POST['email_new_ticket_body']);
 				}
 				if (isset($_POST['email_new_reply_subject'])) {
-					$devOptions['email_new_reply_subject'] = esc_sql($_POST['email_new_reply_subject']);
+					$email_st_options['email_new_reply_subject'] = esc_sql($_POST['email_new_reply_subject']);
 				}
 				if (isset($_POST['email_new_reply_body'])) {
-					$devOptions['email_new_reply_body'] = stripslashes($_POST['email_new_reply_body']);
+					$email_st_options['email_new_reply_body'] = stripslashes($_POST['email_new_reply_body']);
 				}
 				if (isset($_POST['registration'])) {
-					$devOptions['registration'] = esc_sql($_POST['registration']);
+					$email_st_options['registration'] = esc_sql($_POST['registration']);
 				}
 				if (isset($_POST['disable_inline_styles'])) {
-					$devOptions['disable_inline_styles'] = esc_sql($_POST['disable_inline_styles']);
+					$email_st_options['disable_inline_styles'] = esc_sql($_POST['disable_inline_styles']);
 				}
 				if (isset($_POST['allow_guests'])) {
-					$devOptions['allow_guests'] = esc_sql($_POST['allow_guests']);
+					$email_st_options['allow_guests'] = esc_sql($_POST['allow_guests']);
 				}
 
-				update_option($this->admin_options_name, $devOptions); ?>
+				update_option($this->admin_options_name, $email_st_options); ?>
 				<div class="updated"><p><strong>
 				<?php _e( 'Settings Updated.', 'email-support-tickets' ); ?>
 				</strong></p></div>
@@ -209,7 +209,7 @@ if (!class_exists("Email_Support_Tickets")) {
 			<?php $pages = get_pages();
 			foreach ($pages as $pagg) {
 				$option = '<option value="' . $pagg->ID . '"';
-				if ($pagg->ID == $devOptions['mainpage']) {
+				if ($pagg->ID == $email_st_options['mainpage']) {
 					$option .= ' selected="selected"';
 				}
 				$option .='>';
@@ -221,19 +221,19 @@ if (!class_exists("Email_Support_Tickets")) {
 			</select>
 			</p>
 
-                <?php echo '<strong>' . __('Departments', 'email-support-tickets' ) . ':</strong> ' . __('Separate these values with a double pipe, like this ||', 'email-support-tickets' ) . ' <br /><input name="departments" value="' . $devOptions['departments'] . '" style="width:95%;" /><br /><br />
+                <?php echo '<strong>' . __('Departments', 'email-support-tickets' ) . ':</strong> ' . __('Separate these values with a double pipe, like this ||', 'email-support-tickets' ) . ' <br /><input name="departments" value="' . $email_st_options['departments'] . '" style="width:95%;" /><br /><br />
 
-                <strong>' . __('Email', 'email-support-tickets' ) . ':</strong> ' . __('The admin email where all new ticket &amp; reply notification emails will be sent', 'email-support-tickets' ) . '<br /><input name="email" value="' . $devOptions['email'] . '" style="width:95%;" /><br /><br />
+                <strong>' . __('Email', 'email-support-tickets' ) . ':</strong> ' . __('The admin email where all new ticket &amp; reply notification emails will be sent', 'email-support-tickets' ) . '<br /><input name="email" value="' . $email_st_options['email'] . '" style="width:95%;" /><br /><br />
 
-                <strong>' . __('New Ticket Email', 'email-support-tickets' ) . '</strong> ' . __('The subject &amp; body of the email sent to the customer when creating a new ticket.', 'email-support-tickets' ) . '<br /><input name="email_new_ticket_subject" value="' . $devOptions['email_new_ticket_subject'] . '" style="width:95%;" />
-                <textarea style="width:95%;" name="email_new_ticket_body">' . $devOptions['email_new_ticket_body'] . '</textarea>
+                <strong>' . __('New Ticket Email', 'email-support-tickets' ) . '</strong> ' . __('The subject &amp; body of the email sent to the customer when creating a new ticket.', 'email-support-tickets' ) . '<br /><input name="email_new_ticket_subject" value="' . $email_st_options['email_new_ticket_subject'] . '" style="width:95%;" />
+                <textarea style="width:95%;" name="email_new_ticket_body">' . $email_st_options['email_new_ticket_body'] . '</textarea>
                 <br /><br />
 
-                <strong>' . __('New Reply Email', 'email-support-tickets' ) . '</strong> ' . __('The subject &amp; body of the email sent to the customer when there is a new reply.', 'email-support-tickets' ) . '<br /><input name="email_new_reply_subject" value="' . $devOptions['email_new_reply_subject'] . '" style="width:95%;" />
-                <textarea style="width:95%;" name="email_new_reply_body">' . $devOptions['email_new_reply_body'] . '</textarea>
+                <strong>' . __('New Reply Email', 'email-support-tickets' ) . '</strong> ' . __('The subject &amp; body of the email sent to the customer when there is a new reply.', 'email-support-tickets' ) . '<br /><input name="email_new_reply_subject" value="' . $email_st_options['email_new_reply_subject'] . '" style="width:95%;" />
+                <textarea style="width:95%;" name="email_new_reply_body">' . $email_st_options['email_new_reply_body'] . '</textarea>
                 <br /><br />
                 
-                 <strong>' . __('Registration Page URL', 'email-support-tickets' ) . ':</strong> ' . __('Only if you have a custom registration page. Enter entire URL.', 'email-support-tickets' ) . ' <br /><input name="registration" value="' . $devOptions['registration'] . '" style="width:95%;" /><br /><br />
+                 <strong>' . __('Registration Page URL', 'email-support-tickets' ) . ':</strong> ' . __('Only if you have a custom registration page. Enter entire URL.', 'email-support-tickets' ) . ' <br /><input name="registration" value="' . $email_st_options['registration'] . '" style="width:95%;" /><br /><br />
 
 
                 <p><strong>' . __('Disable inline styles', 'email-support-tickets' ) . ':</strong> ' . __('Set this to true if you want to disable the inline CSS styles.', 'email-support-tickets' ) . '  <br />
@@ -244,7 +244,7 @@ if (!class_exists("Email_Support_Tickets")) {
             $pagesX[1] = 'false';
             foreach ($pagesX as $pagg) {
                 $option = '<option value="' . $pagg . '"';
-                if ($pagg == $devOptions['disable_inline_styles']) {
+                if ($pagg == $email_st_options['disable_inline_styles']) {
                     $option .= ' selected="selected"';
                 }
                 $option .='>';
@@ -262,7 +262,7 @@ if (!class_exists("Email_Support_Tickets")) {
 			$pagesY[1] = 'false';
 			foreach ($pagesY as $pagg) {
 				$option = '<option value="' . $pagg . '"';
-				if ($pagg == $devOptions['allow_guests']) {
+				if ($pagg == $email_st_options['allow_guests']) {
 					$option .= ' selected="selected"';
 				}
 				$option .='>';
@@ -286,7 +286,7 @@ if (!class_exists("Email_Support_Tickets")) {
         function printAdminPage() {
             global $wpdb;
 
-            $devOptions = $this->get_admin_options();
+            $email_st_options = $this->get_admin_options();
             if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
                 die(__('Unable to Authenticate', 'email-support-tickets' ));
             }
@@ -400,7 +400,7 @@ if (!class_exists("Email_Support_Tickets")) {
         function printAdminPageEdit() {
             global $wpdb;
 
-            $devOptions = $this->get_admin_options();
+            $email_st_options = $this->get_admin_options();
             if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets') && is_numeric($_GET['primkey'])) {
                 die(__('Unable to Authenticate', 'email-support-tickets' ));
             }
@@ -489,7 +489,7 @@ if (!class_exists("Email_Support_Tickets")) {
             $output .= '<table class="emailst-table" style="width:100%;display:none;">';
             $output .= '<tr><td><h3>' . __('Your message', 'email-support-tickets' ) . '</h3><div id="emailst_nic_panel2" style="display:block;width:100%;"></div> <textarea name="email_st_reply" id="email_st_reply" style="display:block;width:100%;margin:0 auto 0 auto;background-color:#FFF;" rows="5" columns="6"></textarea>';
             $output .= '</td></tr>';
-            $exploder = explode('||', $devOptions['departments']);
+            $exploder = explode('||', $email_st_options['departments']);
 
             $output .= '<tr><td><div style="float:left;"><h3>' . __('Department', 'email-support-tickets' ) . '</h3><select name="emailst_department" id="emailst_department">';
             if (isset($exploder[0])) {
@@ -514,7 +514,7 @@ if (!class_exists("Email_Support_Tickets")) {
                         <div style="float:left;margin-left:20px;"><h3>' . __('Actions', 'email-support-tickets' ) . '</h3>
                             <a onclick="if(confirm(\'' . __('Are you sure you want to delete this ticket?', 'email-support-tickets' ) . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" /> ' . __('Delete Ticket', 'email-support-tickets' ) . '</a>
                         </div>';
-            if ( $devOptions['allow_uploads'] == 'true' ) {
+            if ( $email_st_options['allow_uploads'] == 'true' ) {
                 $output .= '<div style="float:left;margin-left:20px;"><h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file"></div>';
             }
             $output .='         
@@ -532,7 +532,7 @@ if (!class_exists("Email_Support_Tickets")) {
         function email_support_tickets_main_dash_widget() {
             global $wpdb;
 
-            $devOptions = $this->get_admin_options();
+            $email_st_options = $this->get_admin_options();
 
             $table_name = $wpdb->prefix . "emailst_tickets";
             $sql = "SELECT * FROM `{$table_name}` WHERE `resolution`='Open' ORDER BY `last_updated` DESC;";
@@ -659,7 +659,7 @@ if (!class_exists("Email_Support_Tickets")) {
 
             $table_name = $wpdb->prefix . "emailst_tickets";
 
-            $devOptions = $this->get_admin_options();
+            $email_st_options = $this->get_admin_options();
 
             extract(shortcode_atts(array(
                         'display' => 'tickets'
@@ -676,7 +676,7 @@ if (!class_exists("Email_Support_Tickets")) {
             $output = '';
             switch ($display) {
                 case 'tickets': // =========================================================
-                    if ($devOptions['allow_guests'] == 'true' && !is_user_logged_in() && !$this->has_displayed) {
+                    if ($email_st_options['allow_guests'] == 'true' && !is_user_logged_in() && !$this->has_displayed) {
                         if (@isset($_POST['guest_email'])) {
                             $_SESSION['isaest_email'] = esc_sql($_POST['guest_email']);
                         }
@@ -696,10 +696,10 @@ if (!class_exists("Email_Support_Tickets")) {
                             global $current_user;
 
                             $output .= '<div id="emailst_top_page" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="display:inline;"';
                             } $output.='></div><button class="emailst-button" id="emailst-new" onclick="jQuery(\'.emailst-table\').fadeIn(\'slow\');jQuery(\'#emailst-new\').fadeOut(\'slow\');jQuery(\'#emailst_edit_div\').fadeOut(\'slow\');jQuery(\'html, body\').animate({scrollTop: jQuery(\'#emailst_top_page\').offset().top}, 2000);return false;"><img ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/Add.png', __FILE__) . '" alt="' . __('Create a New Ticket', 'email-support-tickets' ) . '" /> ' . __('Create a New Ticket', 'email-support-tickets' ) . '</button><br /><br />';
                             $output .= '<form action="' . plugins_url('/php/submit_ticket.php', __FILE__) . '" method="post" enctype="multipart/form-data">';
@@ -707,24 +707,24 @@ if (!class_exists("Email_Support_Tickets")) {
                                 $output .= '<input type="hidden" name="guest_email" value="' . esc_sql($_POST['guest_email']) . '" />';
                             }
                             $output .= '<table class="emailst-table" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="width:100%"';
                             } $output .='><tr><th><img src="' . plugins_url('/images/Chat.png', __FILE__) . '" alt="' . __('Create a New Ticket', 'email-support-tickets' ) . '" /> ' . __('Create a New Ticket', 'email-support-tickets' ) . '</th></tr>';
                             $output .= '<tr><td><h3>' . __('Title', 'email-support-tickets' ) . '</h3><input type="text" name="emailst_title" id="emailst_title" value=""  ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="width:100%"';
                             } $output .=' /></td></tr>';
                             $output .= '<tr><td><h3>' . __('Your message', 'email-support-tickets' ) . '</h3><div id="emailst_nic_panel" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="display:block;width:100%;"';
                             } $output.='></div> <textarea name="emailst_initial_message" id="emailst_initial_message" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="display:inline;width:100%;margin:0 auto 0 auto;" rows="5"';
                             } $output.='></textarea></td></tr>';
-                            if ($devOptions['allow_uploads'] == 'true') {
+                            if ($email_st_options['allow_uploads'] == 'true') {
                                 $output .= '<tr><td><h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file"></td></tr>';
                             }
-                            $exploder = explode('||', $devOptions['departments']);
+                            $exploder = explode('||', $email_st_options['departments']);
 
                             $output .= '<tr><td><h3>' . __('Department', 'email-support-tickets' ) . '</h3><select name="emailst_department" id="emailst_department">';
                             if (isset($exploder[0])) {
@@ -733,16 +733,16 @@ if (!class_exists("Email_Support_Tickets")) {
                                 }
                             }
                             $output .= '</select><button class="emailst-button" id="emailst_cancel" onclick="cancelAdd();return false;"  ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:right;"';
                             } $output.=' ><img ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button><button class="emailst-button" type="submit" name="emailst_submit" id="emailst_submit" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:right;"';
                             }$output.='><img ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Submit Ticket', 'email-support-tickets' ) . '" /> ' . __('Submit Ticket', 'email-support-tickets' ) . '</button></td></tr>';
 
@@ -756,23 +756,23 @@ if (!class_exists("Email_Support_Tickets")) {
 
                             $output .= '<div id="emailst_edit_ticket"><div id="emailst_edit_ticket_inner"><center><img src="' . plugins_url('/images/loading.gif', __FILE__) . '" alt="' . __('Loading', 'email-support-tickets' ) . '" /></center></div>
                                                     <table ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="width:100%"';
                             } $output.=' id="email_st_reply_editor_table"><tbody>
                                                     <tr id="email_st_reply_editor_table_tr1"><td><h3>' . __('Your reply', 'email-support-tickets' ) . '</h3><div id="emailst_nic_panel2" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="display:block;width:100%;"';
                             }$output.='></div> <textarea name="email_st_reply" id="email_st_reply" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="display:inline;width:100%;margin:0 auto 0 auto;" rows="5"';
                             } $output .='></textarea></td></tr>
                                                     <tr id="email_st_reply_editor_table_tr2"><td>';
 
-                            if ($devOptions['allow_uploads'] == 'true') {
+                            if ($email_st_options['allow_uploads'] == 'true') {
                                 $output .= '<h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file">';
                             }
 
-                            if ($devOptions['allow_closing_ticket'] == 'true') {
+                            if ($email_st_options['allow_closing_ticket'] == 'true') {
                                 $output .= '
                                                         <select name="emailst_set_status" id="emailst_set_status">
                                                                             <option value="Open">' . __('Open', 'email-support-tickets' ) . '</option>
@@ -782,16 +782,16 @@ if (!class_exists("Email_Support_Tickets")) {
                             }
 
                             $output .= '<button class="emailst-button" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:right;"';
                             } $output.=' onclick="cancelEdit();return false;"><img src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' /> ' . __('Cancel', 'email-support-tickets' ) . '</button><button class="emailst-button" type="submit" name="emailst_submit2" id="emailst_submit2" ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:right;"';
                             } $output.='><img ';
-                            if ($devOptions['disable_inline_styles'] == 'false') {
+                            if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Submit Reply', 'email-support-tickets' ) . '" /> ' . __('Submit Reply', 'email-support-tickets' ) . '</button></td></tr>
                                                     </tbody></table>
@@ -811,10 +811,10 @@ if (!class_exists("Email_Support_Tickets")) {
 
                             $output .= '<div id="emailst_edit_div">';
 
-                            if ($devOptions['allow_all_tickets_to_be_viewed'] == 'true') {
+                            if ($email_st_options['allow_all_tickets_to_be_viewed'] == 'true') {
                                 $sql = "SELECT * FROM `{$table_name}` ORDER BY `last_updated` DESC;";
                             }
-                            if ($devOptions['allow_all_tickets_to_be_viewed'] == 'false') {
+                            if ($email_st_options['allow_all_tickets_to_be_viewed'] == 'false') {
                                 $sql = "SELECT * FROM `{$table_name}` WHERE `user_id`={$emailst_userid} AND `email`='{$emailst_email}' ORDER BY `last_updated` DESC;";
                             }
 
@@ -822,12 +822,12 @@ if (!class_exists("Email_Support_Tickets")) {
                             if (isset($results) && isset($results[0]['primkey'])) {
                                 $output .= '<h3>' . __('View Previous Tickets:', 'email-support-tickets' ) . '</h3>';
                                 $output .= '<table class="widefat" ';
-                                if ($devOptions['disable_inline_styles'] == 'false') {
+                                if ($email_st_options['disable_inline_styles'] == 'false') {
                                     $output.='style="width:100%"';
                                 }$output.='><tr><th>' . __('Ticket', 'email-support-tickets' ) . '</th><th>' . __('Status', 'email-support-tickets' ) . '</th><th>' . __('Last Reply', 'email-support-tickets' ) . '</th></tr>';
                                 foreach ($results as $result) {
                                     if (trim($result['last_staff_reply']) == '') {
-                                        if ($devOptions['allow_all_tickets_to_be_viewed'] == 'false') {
+                                        if ($email_st_options['allow_all_tickets_to_be_viewed'] == 'false') {
                                             $last_staff_reply = __('you', 'email-support-tickets' );
                                         } else {
                                             $last_staff_reply = $result['email'];
@@ -839,7 +839,7 @@ if (!class_exists("Email_Support_Tickets")) {
                                             $last_staff_reply = '<strong>' . __('Staff Member', 'email-support-tickets' ) . '</strong>';
                                         }
                                     }
-                                    if ($devOptions['allow_closing_ticket'] == 'true') {
+                                    if ($email_st_options['allow_closing_ticket'] == 'true') {
                                         if ($result['resolution'] == 'Closed') {
                                             $canReopen = 'Reopenable';
                                         } else {
@@ -849,10 +849,10 @@ if (!class_exists("Email_Support_Tickets")) {
                                         $canReopen = $result['resolution'];
                                     }
                                     $output .= '<tr><td><a href="" onclick="loadTicket(' . $result['primkey'] . ',\'' . $canReopen . '\');return false;" ';
-                                    if ($devOptions['disable_inline_styles'] == 'false') {
+                                    if ($email_st_options['disable_inline_styles'] == 'false') {
                                         $output.='style="border:none;text-decoration:none;"';
                                     }$output.='><img';
-                                    if ($devOptions['disable_inline_styles'] == 'false') {
+                                    if ($email_st_options['disable_inline_styles'] == 'false') {
                                         $output.=' style="float:left;border:none;margin-right:5px;"';
                                     }$output.=' src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'email-support-tickets' ) . ' ' . $last_staff_reply . '</td></tr>';
                                 }
@@ -862,8 +862,8 @@ if (!class_exists("Email_Support_Tickets")) {
                         }
                     } else {
                         
-                        if( ! empty( $devOptions['registration'] ) )
-				$register_url = $devOptions['registration'];
+                        if( ! empty( $email_st_options['registration'] ) )
+				$register_url = $email_st_options['registration'];
 			else
 				$register_url = site_url('/wp-login.php?action=register&redirect_to=' . get_permalink());
 

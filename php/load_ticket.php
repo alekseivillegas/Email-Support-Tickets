@@ -14,7 +14,7 @@ if (session_id() == "") {@session_start();};
 
 if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_POST['primkey'])) {
     
-    $devOptions = get_option('EmailSupportTicketsAdminOptions');
+    $email_st_options = get_option('EmailSupportTicketsAdminOptions');
     
     // Guest additions here
     if(is_user_logged_in()) {
@@ -29,16 +29,16 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     
     $primkey = intval($_POST['primkey']);
 
-    if($devOptions['allow_all_tickets_to_be_viewed']=='true') {
+    if($email_st_options['allow_all_tickets_to_be_viewed']=='true') {
         $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
     }                                                
-    if($devOptions['allow_all_tickets_to_be_viewed']=='false') {
+    if($email_st_options['allow_all_tickets_to_be_viewed']=='false') {
         $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' AND `user_id`='{$emailst_userid}' AND `email`='{$emailst_email}' LIMIT 0, 1;";
     }    
     
     $results = $wpdb->get_results( $sql , ARRAY_A );
     if(isset($results[0])) {
-        if($devOptions['allow_all_tickets_to_be_viewed']=='true') {
+        if($email_st_options['allow_all_tickets_to_be_viewed']=='true') {
             $emailst_username = $results[0]['email'];
         }        
         echo '<div id="emailst_meta"><strong>'.base64_decode($results[0]['title']).'</strong> ('.$results[0]['resolution'].' - '.base64_decode($results[0]['type']).')</div>';
