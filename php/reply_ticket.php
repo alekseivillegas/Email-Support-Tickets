@@ -1,14 +1,14 @@
 <?php
-global $wpsc_error_reporting;
-if($wpsc_error_reporting==false) {
+global $emailst_error_reporting;
+if($emailst_error_reporting==false) {
     error_reporting(0);
 }
 if (!function_exists('add_action'))
 {
     require_once("../../../../wp-config.php");
 }
-global $current_user, $wpdb, $EmailSupportTickets;
-$devOptions = $EmailSupportTickets->getAdminOptions();
+global $current_user, $wpdb, $Email_Support_Tickets;
+$devOptions = $Email_Support_Tickets->get_admin_options();
 if (session_id() == "") {@session_start();};
 
 if ( current_user_can('manage_emailst_support_tickets')) { // admin edits such as closing tickets should happen here first:

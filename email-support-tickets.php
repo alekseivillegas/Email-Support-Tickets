@@ -18,7 +18,7 @@ published by the Free Software Foundation.
 
 Email Support Tickets is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+MERCHANTABILITY or FITFNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
@@ -30,56 +30,55 @@ if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
 	require_once(ABSPATH . 'wp-includes/pluggable.php');
 }
 
-
 //Global variables:
-global $EmailSupportTickets, $EmailSupportTickets_version, $EmailSupportTickets_db_version, $APjavascriptQueue, $wpsc_error_reporting;
-$EmailSupportTickets_version = 3.0;
-$EmailSupportTickets_db_version = 3.0;
+global $Email_Support_Tickets, $email_support_tickets_version, $email_support_tickets_db_version, $APjavascriptQueue, $emailst_error_reporting;
+$email_support_tickets_version = 1.0; // @todo update
+$email_support_tickets_db_version = 1.0; // @todo update
 $APjavascriptQueue = NULL;
-$wpsc_error_reporting = false;
+$emailst_error_reporting = false;
 
 // Create the proper directory structure if it is not already created
 if (!is_dir(WP_CONTENT_DIR . '/uploads/')) {
 	mkdir(WP_CONTENT_DIR . '/uploads/', 0777, true);
 }
-if (!is_dir(WP_CONTENT_DIR . '/uploads/EmailSupportTickets/')) {
-	mkdir(WP_CONTENT_DIR . '/uploads/EmailSupportTickets/', 0777, true);
+if (!is_dir(WP_CONTENT_DIR . '/uploads/email-support-tickets/')) {
+	mkdir(WP_CONTENT_DIR . '/uploads/email-support-tickets/', 0777, true);
 }
 
 /**
  * Action definitions 
  */
-function EmailSupportTickets_settings() {
-	do_action('EmailSupportTickets_settings');// @todo del
+function email_support_tickets_settings() {
+	do_action('email_support_tickets_settings');
 }
 
-function EmailSupportTickets_saveSettings() {
-	do_action('EmailSupportTickets_saveSettings');
+function email_support_tickets_save_settings() {
+	do_action('email_support_tickets_save_settings');
 }
 
 function emailst_extra_tabs_index() {
 	do_action('emailst_extra_tabs_index');
 }
 
-function EmailSupportTickets_extraTabsContents() {
-    do_action('EmailSupportTickets_extraTabsContents');
+function email_support_tickets_extra_tabs_content() {
+    do_action('email_support_tickets_extra_tabs_content');
 }
 
 /**
  * ===============================================================================================================
- * Main EmailSupportTickets Class
+ * Main Email_Support_Tickets Class
  */
-if (!class_exists("EmailSupportTickets")) {
+if (!class_exists("Email_Support_Tickets")) {
 
-	class EmailSupportTickets {
+	class Email_Support_Tickets {
 
-		var $adminOptionsName = "EmailSupportTicketsAdminOptions";
+		var $admin_options_name = "EmailSupportTicketsAdminOptions";
 		var $emailst_settings = null;
-		var $hasDisplayed = false;
-		var $hasDisplayedCompat = false; // hack for Jetpack compatibility
-		var $hasDisplayedCompat2 = false; // hack for Jetpack compatibility
+		var $has_displayed = false;
+		var $has_displayed_compat = false; // hack for Jetpack compatibility
+		var $has_displayed_compat2 = false; // hack for Jetpack compatibility
 
-		function EmailSupportTickets() { //constructor
+		function Email_Support_Tickets() { //constructor
 			// Let's make sure the admin is always in charge
 			if (is_user_logged_in()) {
 				if (is_super_admin() || is_admin()) {
@@ -98,11 +97,11 @@ if (!class_exists("EmailSupportTickets")) {
 		}
 
 		function init() {
-			$this->getAdminOptions();
+			$this->get_admin_options();
 		}
 
 		//Returns an array of admin options
-		function getAdminOptions() {
+		function get_admin_options() {
 
 			$apAdminOptions = array('mainpage' => '',
 				'turnon_EmailSupportTickets' => 'true',
@@ -125,119 +124,104 @@ if (!class_exists("EmailSupportTickets")) {
             if ($this->emailst_settings != NULL) {
                 $devOptions = $this->emailst_settings;
             } else {
-                $devOptions = get_option($this->adminOptionsName);
+                $devOptions = get_option($this->admin_options_name);
             }
             if (!empty($devOptions)) {
                 foreach ($devOptions as $key => $option) {
                     $apAdminOptions[$key] = $option;
                 }
             }
-            update_option($this->adminOptionsName, $apAdminOptions);
+            update_option($this->admin_options_name, $apAdminOptions);
             return $apAdminOptions;
         }
 
-        /**
-         * Admin Header 
-         */
-        function adminHeader() {
+		function adminHeader() {
 
-            if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
-                die(__('Unable to Authenticate', 'email-support-tickets' ));
-            }
-
-
-            echo '
-            
-            <div style="padding: 20px 10px 10px 10px;">';
-
-                echo '<div style="float:left;"><img src="' . plugin_dir_url(__FILE__) . '/images/logo.png" alt="EmailSupportTickets" /></div>';
-
-            echo '
-            </div>
-            <br style="clear:both;" />
-            ';
-        }
+			if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
+				die( __( 'Unable to Authenticate', 'email-support-tickets' ) );
+			}
+			echo '<div style="padding: 20px 10px 10px 10px;">';
+			echo '<div style="float:left;"><img src="' . plugin_dir_url(__FILE__) . '/images/logo.png" alt="Email_Support_Tickets" /></div>';
+			echo '</div><br style="clear:both;" />';
+		}
 
 		function printAdminPageSettings() {
 
-            EmailSupportTickets_saveSettings(); // Action hook for saving
+			email_support_tickets_save_settings(); // Action hook for saving
 
-            $devOptions = $this->getAdminOptions();
+			$devOptions = $this->get_admin_options();
 
-            echo '<script type="text/javascript">
-                jQuery(function() {setTimeout(function(){ jQuery(".updated").fadeOut(); },4000);});
-            </script>
-		<div class="wrap">';
+			echo '<script type="text/javascript">jQuery(function() {setTimeout(function(){ jQuery(".updated").fadeOut(); },4000);});</script>'; ?>
+			<div class="wrap">
 
-            $this->adminHeader();
+			<?php $this->adminHeader();
 
-            if (@isset($_POST['update_EmailSupportTicketsSettings'])) {
+			if (@isset($_POST['update_EmailSupportTicketsSettings'])) {
 
-                if (isset($_POST['EmailSupportTicketsmainpage'])) {
-                    $devOptions['mainpage'] = esc_sql($_POST['EmailSupportTicketsmainpage']);
-                }
-                if (isset($_POST['turnEmailSupportTicketsOn'])) {
-                    $devOptions['turnon_EmailSupportTickets'] = esc_sql($_POST['turnEmailSupportTicketsOn']);
-                }
-                if (isset($_POST['departments'])) {
-                    $devOptions['departments'] = esc_sql($_POST['departments']);
-                }
-                if (isset($_POST['email'])) {
-                    $devOptions['email'] = esc_sql($_POST['email']);
-                }
-                if (isset($_POST['email_new_ticket_subject'])) {
-                    $devOptions['email_new_ticket_subject'] = esc_sql($_POST['email_new_ticket_subject']);
-                }
-                if (isset($_POST['email_new_ticket_body'])) {
-                    $devOptions['email_new_ticket_body'] = stripslashes($_POST['email_new_ticket_body']);
-                }
-                if (isset($_POST['email_new_reply_subject'])) {
-                    $devOptions['email_new_reply_subject'] = esc_sql($_POST['email_new_reply_subject']);
-                }
-                if (isset($_POST['email_new_reply_body'])) {
-                    $devOptions['email_new_reply_body'] = stripslashes($_POST['email_new_reply_body']);
-                }
-		if (isset($_POST['registration'])) {
-			$devOptions['registration'] = esc_sql($_POST['registration']);
-		}
-                if (isset($_POST['disable_inline_styles'])) {
-                    $devOptions['disable_inline_styles'] = esc_sql($_POST['disable_inline_styles']);
-                }
-                if (isset($_POST['allow_guests'])) {
-                    $devOptions['allow_guests'] = esc_sql($_POST['allow_guests']);
-                }
+				if (isset($_POST['EmailSupportTicketsmainpage'])) {
+					$devOptions['mainpage'] = esc_sql($_POST['EmailSupportTicketsmainpage']);
+				}
+				if (isset($_POST['turnEmailSupportTicketsOn'])) {
+					$devOptions['turnon_EmailSupportTickets'] = esc_sql($_POST['turnEmailSupportTicketsOn']);
+				}
+				if (isset($_POST['departments'])) {
+					$devOptions['departments'] = esc_sql($_POST['departments']);
+				}
+				if (isset($_POST['email'])) {
+					$devOptions['email'] = esc_sql($_POST['email']);
+				}
+				if (isset($_POST['email_new_ticket_subject'])) {
+					$devOptions['email_new_ticket_subject'] = esc_sql($_POST['email_new_ticket_subject']);
+				}
+				if (isset($_POST['email_new_ticket_body'])) {
+					$devOptions['email_new_ticket_body'] = stripslashes($_POST['email_new_ticket_body']);
+				}
+				if (isset($_POST['email_new_reply_subject'])) {
+					$devOptions['email_new_reply_subject'] = esc_sql($_POST['email_new_reply_subject']);
+				}
+				if (isset($_POST['email_new_reply_body'])) {
+					$devOptions['email_new_reply_body'] = stripslashes($_POST['email_new_reply_body']);
+				}
+				if (isset($_POST['registration'])) {
+					$devOptions['registration'] = esc_sql($_POST['registration']);
+				}
+				if (isset($_POST['disable_inline_styles'])) {
+					$devOptions['disable_inline_styles'] = esc_sql($_POST['disable_inline_styles']);
+				}
+				if (isset($_POST['allow_guests'])) {
+					$devOptions['allow_guests'] = esc_sql($_POST['allow_guests']);
+				}
 
-                update_option($this->adminOptionsName, $devOptions);
-			echo '<div class="updated"><p><strong>';
-                _e( 'Settings Updated.', 'email-support-tickets' );
-                echo '</strong></p></div>';
-            } ?>
+				update_option($this->admin_options_name, $devOptions); ?>
+				<div class="updated"><p><strong>
+				<?php _e( 'Settings Updated.', 'email-support-tickets' ); ?>
+				</strong></p></div>
+			<?php } ?>
 
-            <h2><?php _e('Settings', 'email-support-tickets' ); ?></h2>
-            <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-            <?php echo '<p><strong>' . __('Main Page', 'email-support-tickets' ) . ':</strong> ' . __('You need to use a Page as the base for Email Support Tickets.', 'email-support-tickets' ) . '  <br />
-            <select name="EmailSupportTicketsmainpage">
-             <option value="">';
-            attribute_escape(__('Select page', 'email-support-tickets' ));
-            echo '</option>';
+			<h2><?php _e( 'Settings', 'email-support-tickets' ); ?></h2>
+			<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+			<p><strong><?php _e('Main Page', 'email-support-tickets' ); ?>:</strong><?php e_( 'You need to use a Page as the base for Email Support Tickets.', 'email-support-tickets' ); ?><br />
+			<select name="EmailSupportTicketsmainpage">
+			<option value="">
+			<?php attribute_escape( __( 'Select page', 'email-support-tickets' ) ); ?>
+			</option>
 
-            $pages = get_pages();
-            foreach ($pages as $pagg) {
-                $option = '<option value="' . $pagg->ID . '"';
-                if ($pagg->ID == $devOptions['mainpage']) {
-                    $option .= ' selected="selected"';
-                }
-                $option .='>';
-                $option .= $pagg->post_title;
-                $option .= '</option>';
-                echo $option;
-            }
+			<?php $pages = get_pages();
+			foreach ($pages as $pagg) {
+				$option = '<option value="' . $pagg->ID . '"';
+				if ($pagg->ID == $devOptions['mainpage']) {
+					$option .= ' selected="selected"';
+				}
+				$option .='>';
+				$option .= $pagg->post_title;
+				$option .= '</option>';
+				echo $option;
+			} ?>
 
-            echo '
-            </select>
-            </p>
+			</select>
+			</p>
 
-                <strong>' . __('Departments', 'email-support-tickets' ) . ':</strong> ' . __('Separate these values with a double pipe, like this ||', 'email-support-tickets' ) . ' <br /><input name="departments" value="' . $devOptions['departments'] . '" style="width:95%;" /><br /><br />
+                <?php echo '<strong>' . __('Departments', 'email-support-tickets' ) . ':</strong> ' . __('Separate these values with a double pipe, like this ||', 'email-support-tickets' ) . ' <br /><input name="departments" value="' . $devOptions['departments'] . '" style="width:95%;" /><br /><br />
 
                 <strong>' . __('Email', 'email-support-tickets' ) . ':</strong> ' . __('The admin email where all new ticket &amp; reply notification emails will be sent', 'email-support-tickets' ) . '<br /><input name="email" value="' . $devOptions['email'] . '" style="width:95%;" /><br /><br />
 
@@ -267,54 +251,42 @@ if (!class_exists("EmailSupportTickets")) {
                 $option .= $pagg;
                 $option .= '</option>';
                 echo $option;
-            }
+            } ?>
+                
+			</select>
 
-            echo '
-                </select>
-
-                <p><strong>' . __('Allow Guests', 'email-support-tickets' ) . ':</strong> ' . __('Set this to true if you want Guests to be able to use the support ticket system.', 'email-support-tickets' ) . '  <br />
+			<p><strong><?php e_( 'Allow Guests', 'email-support-tickets' ); ?>:</strong><?php e_( 'Set this to true if you want Guests to be able to use the support ticket system.', 'email-support-tickets' ); ?><br />
                 <select name="allow_guests">
-                 ';
+			<?php 
+			$pagesY[0] = 'true';
+			$pagesY[1] = 'false';
+			foreach ($pagesY as $pagg) {
+				$option = '<option value="' . $pagg . '"';
+				if ($pagg == $devOptions['allow_guests']) {
+					$option .= ' selected="selected"';
+				}
+				$option .='>';
+				$option .= $pagg;
+				$option .= '</option>';
+				echo $option;
+			} ?>
 
-            $pagesY[0] = 'true';
-            $pagesY[1] = 'false';
-            foreach ($pagesY as $pagg) {
-                $option = '<option value="' . $pagg . '"';
-                if ($pagg == $devOptions['allow_guests']) {
-                    $option .= ' selected="selected"';
-                }
-                $option .='>';
-                $option .= $pagg;
-                $option .= '</option>';
-                echo $option;
-            }
-
-            echo '
                 </select>
                 </p>
-                
-
+			<?php email_support_tickets_settings(); ?>
             <input type="hidden" name="update_EmailSupportTicketsSettings" value="update" />
-            <div> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_EmailSupportTicketsSettings_submit" value="';
-            _e('Update Settings', 'email-support-tickets' );
-            echo'" /></div>
-            
-
+            <div> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_EmailSupportTicketsSettings_submit" value="<?php _e('Update Settings', 'email-support-tickets' ); ?>" /></div>
             </form>
-            
             </div><!-- .wrap -->
-
-        ';
-
-            
-        }
+           
+		<?php }
 
 
         //Prints out the admin page ================================================================================
         function printAdminPage() {
             global $wpdb;
 
-            $devOptions = $this->getAdminOptions();
+            $devOptions = $this->get_admin_options();
             if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
                 die(__('Unable to Authenticate', 'email-support-tickets' ));
             }
@@ -417,7 +389,7 @@ if (!class_exists("EmailSupportTickets")) {
 
 
 
-            EmailSupportTickets_extraTabsContents();
+            email_support_tickets_extra_tabs_content();
 
             echo '
 			</div></div>';
@@ -428,7 +400,7 @@ if (!class_exists("EmailSupportTickets")) {
         function printAdminPageEdit() {
             global $wpdb;
 
-            $devOptions = $this->getAdminOptions();
+            $devOptions = $this->get_admin_options();
             if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets') && is_numeric($_GET['primkey'])) {
                 die(__('Unable to Authenticate', 'email-support-tickets' ));
             }
@@ -557,10 +529,10 @@ if (!class_exists("EmailSupportTickets")) {
         }
 
         // Dashboard widget code=======================================================================
-        function EmailSupportTickets_main_dashboard_widget_function() {
+        function email_support_tickets_main_dash_widget() {
             global $wpdb;
 
-            $devOptions = $this->getAdminOptions();
+            $devOptions = $this->get_admin_options();
 
             $table_name = $wpdb->prefix . "emailst_tickets";
             $sql = "SELECT * FROM `{$table_name}` WHERE `resolution`='Open' ORDER BY `last_updated` DESC;";
@@ -597,7 +569,7 @@ if (!class_exists("EmailSupportTickets")) {
         // Create the function use in the action hook
         function email_support_tickets_dashboard_widgets() {
             if (function_exists('current_user_can') && current_user_can('manage_emailst_support_tickets')) {
-                wp_add_dashboard_widget('EmailSupportTickets_main_dashboard_widgets', __('EmailSupportTickets Overview', 'email-support-tickets' ), array(&$this, 'EmailSupportTickets_main_dashboard_widget_function'));
+                wp_add_dashboard_widget('EmailSupportTickets_main_dashboard_widgets', __('EmailSupportTickets Overview', 'email-support-tickets' ), array( $this, 'email_support_tickets_main_dash_widget' ) );
             }
         }
 
@@ -611,9 +583,9 @@ if (!class_exists("EmailSupportTickets")) {
         }
 
         // Installation ==============================================================================================		
-		function EmailSupportTickets_install() {
+		function email_support_tickets_install() {
 			global $wpdb;
-			global $EmailSupportTickets_db_version;
+			global $email_support_tickets_db_version;
 
 			$table_name = $wpdb->prefix . "emailst_tickets";
 			if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
@@ -673,21 +645,21 @@ if (!class_exists("EmailSupportTickets")) {
                 dbDelta($sql);
             }
 */
-			add_option( 'EmailSupportTickets_db_version', $EmailSupportTickets_db_version );
+			add_option( 'email_support_tickets_db_version', $email_support_tickets_db_version );
 
 
-			add_action( 'init', array( $EmailSupportTickets, 'init' ) ); // Create options on activation // @test		
+			add_action( 'init', array( $Email_Support_Tickets, 'init' ) ); // Create options on activation // @test		
 
 		}
 
         // END Installation ==============================================================================================
         // Shortcode =========================================
-        function EmailSupportTickets_mainshortcode($atts) {
+        function email_support_tickets_shortcode($atts) {
             global $wpdb;
 
             $table_name = $wpdb->prefix . "emailst_tickets";
 
-            $devOptions = $this->getAdminOptions();
+            $devOptions = $this->get_admin_options();
 
             extract(shortcode_atts(array(
                         'display' => 'tickets'
@@ -704,7 +676,7 @@ if (!class_exists("EmailSupportTickets")) {
             $output = '';
             switch ($display) {
                 case 'tickets': // =========================================================
-                    if ($devOptions['allow_guests'] == 'true' && !is_user_logged_in() && !$this->hasDisplayed) {
+                    if ($devOptions['allow_guests'] == 'true' && !is_user_logged_in() && !$this->has_displayed) {
                         if (@isset($_POST['guest_email'])) {
                             $_SESSION['isaest_email'] = esc_sql($_POST['guest_email']);
                         }
@@ -720,7 +692,7 @@ if (!class_exists("EmailSupportTickets")) {
                                                 ';
                     }
                     if (is_user_logged_in() || @isset($_SESSION['isaest_email']) || @isset($_POST['guest_email'])) {
-                        if (!$this->hasDisplayed) {
+                        if (!$this->has_displayed) {
                             global $current_user;
 
                             $output .= '<div id="emailst_top_page" ';
@@ -906,20 +878,20 @@ if (!class_exists("EmailSupportTickets")) {
 
             // Jetpack incompatibilities hack
             if (@!file_exists(WP_PLUGIN_DIR . '/jetpack/jetpack.php')) {
-                $this->hasDisplayed = true;
+                $this->has_displayed = true;
             } else {
                 @include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
                 if (@is_plugin_active(WP_PLUGIN_DIR . '/jetpack/jetpack.php')) {
 
-                    if ($this->hasDisplayedCompat == true) {
-                        if ($this->hasDisplayedCompat2 == true) {
-                            $this->hasDisplayed = true;
+                    if ($this->has_displayed_compat == true) {
+                        if ($this->has_displayed_compat2 == true) {
+                            $this->has_displayed = true;
                         }
-                        $this->hasDisplayedCompat2 = true;
+                        $this->has_displayed_compat2 = true;
                     }
-                    $this->hasDisplayedCompat = true;
+                    $this->has_displayed_compat = true;
                 } else {
-                    $this->hasDisplayed = true;
+                    $this->has_displayed = true;
                 }
             }
 
@@ -932,7 +904,7 @@ if (!class_exists("EmailSupportTickets")) {
 
     /**
      * ===============================================================================================================
-     * End Main EmailSupportTickets Class
+     * End Main Email_Support_Tickets Class
      */
 }
 // end IF
@@ -940,19 +912,19 @@ if (!class_exists("EmailSupportTickets")) {
 /**
  * Initialize the admin panel
  */
-if (!function_exists("EmailSupportTicketsAdminPanel")) {
+if (!function_exists("email_support_tickets_admin_panel")) {
 
-	function EmailSupportTicketsAdminPanel() {
-		global $EmailSupportTickets;
-		if (!isset($EmailSupportTickets)) {
+	function email_support_tickets_admin_panel() {
+		global $Email_Support_Tickets;
+		if (!isset($Email_Support_Tickets)) {
 			return;
 		}
 		if (function_exists('add_menu_page')) {
-			add_menu_page( __( 'Email Support Tickets', 'email-support-tickets' ), __( 'Support Tickets', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-admin', array( $EmailSupportTickets, 'printAdminPage' ), plugin_dir_url( __FILE__ ) . '/images/controller.png' );
-			$settingsPage = add_submenu_page( 'email-support-tickets-admin', __( 'Settings', 'email-support-tickets' ), __( 'Settings', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-settings', array( $EmailSupportTickets, 'printAdminPageSettings' ) );
-			$editPage = add_submenu_page( NULL, __( 'Reply to Support Ticket', 'email-support-tickets' ), __( 'Reply to Support Tickets', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-edit', array( $EmailSupportTickets, 'printAdminPageEdit' ) );
-			add_action( "admin_print_scripts-$editPage", array( $EmailSupportTickets, 'addHeaderCode' ) );
-			add_action( "admin_print_scripts-$settingsPage", array( $EmailSupportTickets, 'addHeaderCode' ) );            
+			add_menu_page( __( 'Email Support Tickets', 'email-support-tickets' ), __( 'Support Tickets', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-admin', array( $Email_Support_Tickets, 'printAdminPage' ), plugin_dir_url( __FILE__ ) . '/images/controller.png' );
+			$settingsPage = add_submenu_page( 'email-support-tickets-admin', __( 'Settings', 'email-support-tickets' ), __( 'Settings', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-settings', array( $Email_Support_Tickets, 'printAdminPageSettings' ) );
+			$editPage = add_submenu_page( NULL, __( 'Reply to Support Ticket', 'email-support-tickets' ), __( 'Reply to Support Tickets', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-edit', array( $Email_Support_Tickets, 'printAdminPageEdit' ) );
+			add_action( "admin_print_scripts-$editPage", array( $Email_Support_Tickets, 'addHeaderCode' ) );
+			add_action( "admin_print_scripts-$settingsPage", array( $Email_Support_Tickets, 'addHeaderCode' ) );            
 		}
 	}
 }
@@ -984,21 +956,21 @@ dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 /**
  * Call everything
  */
-if (class_exists("EmailSupportTickets")) {
-	$EmailSupportTickets = new EmailSupportTickets();
+if (class_exists("Email_Support_Tickets")) {
+	$Email_Support_Tickets = new Email_Support_Tickets();
 }
 
 //Actions and Filters   
-if (isset($EmailSupportTickets)) {
+if (isset($Email_Support_Tickets)) {
 
 
-	register_activation_hook(__FILE__, array(&$EmailSupportTickets, 'EmailSupportTickets_install')); // Install DB schema
-//@test hook to activation    add_action('wpsc-support-tickets/EmailSupportTickets.php', array(&$EmailSupportTickets, 'init')); // Create options on activation // @test
+	register_activation_hook( __FILE__, array( $Email_Support_Tickets, 'email_support_tickets_install' ) ); // Install DB schema
+//@test hook to activation    add_action('wpsc-support-tickets/h.php', array(&$Email_Support_Tickets, 'init')); // Create options on activation // @test
 
-	add_action('admin_menu', 'EmailSupportTicketsAdminPanel'); // Create admin panel
-	add_action('wp_dashboard_setup', array(&$EmailSupportTickets, 'email_support_tickets_dashboard_widgets')); // Dashboard widget
-    //add_action('wp_head', array(&$EmailSupportTickets, 'addHeaderCode')); // Place EmailSupportTickets comment into header
-	add_shortcode('EmailSupportTickets', array(&$EmailSupportTickets, 'EmailSupportTickets_mainshortcode'));
-	add_action("wp_print_scripts", array(&$EmailSupportTickets, "addHeaderCode"));
-	add_action('init', 'email_st_load_init');
+	add_action( 'admin_menu', 'email_support_tickets_admin_panel' );
+	add_action( 'wp_dashboard_setup', array( $Email_Support_Tickets, 'email_support_tickets_dashboard_widgets' ) );
+    //add_action('wp_head', array(&$Email_Support_Tickets, 'addHeaderCode')); // Place EmailSupportTickets comment into header
+	add_shortcode( 'EmailSupportTickets', array( $Email_Support_Tickets, 'email_support_tickets_shortcode' ) );
+	add_action( "wp_print_scripts", array( $Email_Support_Tickets, "addHeaderCode" ) );
+	add_action( 'init', 'email_st_load_init' );
 }

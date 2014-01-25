@@ -1,18 +1,18 @@
 <?php
-global $wpsc_error_reporting;
-if($wpsc_error_reporting==false) {
+global $emailst_error_reporting;
+if ( $emailst_error_reporting==false ) {
     error_reporting(0);
 }
-if (!function_exists('add_action'))
+if ( !function_exists( 'add_action' ) )
 {
     require_once("../../../../wp-config.php");
 }
 
-global $current_user, $wpdb, $EmailSupportTickets;
+global $current_user, $wpdb, $Email_Support_Tickets;
 
-if(is_user_logged_in()) {
+if ( is_user_logged_in() ) {
     if ( function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
-            die(__( 'Cheatin&#8217; uh?', 'email-support-tickets' ));
+            die( __( 'Cheatin&#8217; uh?', 'email-support-tickets' ) );
     }
 
     if(@isset($_GET['ticketid']) && @is_numeric($_GET['ticketid']) && @!isset($_GET['replyid'])) {

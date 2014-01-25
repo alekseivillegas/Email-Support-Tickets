@@ -1,14 +1,14 @@
 <?php
-global $wpsc_error_reporting;
-if($wpsc_error_reporting==false) {
+global $emailst_error_reporting;
+if($emailst_error_reporting==false) {
     error_reporting(0);
 }
 if (!function_exists('add_action')) {
     require_once("../../../../wp-config.php");
 }
-global $current_user, $wpdb, $EmailSupportTickets;
+global $current_user, $wpdb, $Email_Support_Tickets;
 $devOptions = NULL;
-$devOptions = $EmailSupportTickets->getAdminOptions();
+$devOptions = $Email_Support_Tickets->get_admin_options();
 if(!isset($devOptions['mainpage']) || $devOptions['mainpage']=='') {
     $devOptions['mainpage'] = home_url();
 }
@@ -77,12 +77,12 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
 		$file_name = "";
 		$file_extension = "";
 		$uploadErrors = array(
-			0=>__("There is no error, the file uploaded with success", 'email-support-tickets' ),
-			1=>__("The uploaded file exceeds the upload_max_filesize directive in php.ini", 'email-support-tickets' ),
-			2=>__("The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form", 'email-support-tickets' ),
-			3=>__("The uploaded file was only partially uploaded", 'email-support-tickets' ),
-			4=>__("No file was uploaded", 'email-support-tickets' ),
-			6=>__("Missing a temporary folder", 'email-support-tickets' )
+			0 => __( "There is no error, the file uploaded with success", 'email-support-tickets' ),
+			1 => __( "The uploaded file exceeds the upload_max_filesize directive in php.ini", 'email-support-tickets' ),
+			2 => __( "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form", 'email-support-tickets' ),
+			3 => __( "The uploaded file was only partially uploaded", 'email-support-tickets' ),
+			4 => __( "No file was uploaded", 'email-support-tickets' ),
+			6 => __( "Missing a temporary folder", 'email-support-tickets' )
 		);
 	// Validate the upload
 		if (!isset($_FILES[$upload_name])) {
