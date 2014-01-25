@@ -64,8 +64,8 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
 			_e( 'POST exceeded maximum allowed size.', 'email-support-tickets' );
 		}
 	// Settings
-                $wpsc_wordpress_upload_dir = wp_upload_dir();
-		$save_path = $wpsc_wordpress_upload_dir['basedir']. '/email-support-tickets/';
+                $emailst_wordpress_upload_dir = wp_upload_dir();
+		$save_path = $emailst_wordpress_upload_dir['basedir']. '/email-support-tickets/';
                 if(!is_dir($save_path)) {
                         @mkdir($save_path);
                 }                
@@ -111,12 +111,12 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
 			HandleError( __( 'File could not be saved.', 'email-support-tickets' ) );
 		} else {
                     // SUCCESS
-                   $emailst_initial_message .= '<br /><p class="wpsc-support-ticket-attachment"';
+                   $emailst_initial_message .= '<br /><p class="emailst-support-ticket-attachment"';
                     if($devOptions['disable_inline_styles']=='false'){
                         $emailst_initial_message .=  ' style="border: 1px solid #DDD;padding:8px;" ';
                     }
                     $emailst_initial_message .= '>';
-                    $emailst_initial_message .= '<strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'" target="_blank">'.$wpsc_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'</a></p>';
+                    $emailst_initial_message .= '<strong>'.__( 'ATTACHMENT','email-support-tickets' ).'</strong>: <a href="'.$emailst_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'" target="_blank">'.$emailst_wordpress_upload_dir['baseurl'].'/email-support-tickets/'.$file_name.'</a></p>';
 	       }       
     }    
     $emailst_title = base64_encode(strip_tags($_POST['emailst_title']));
