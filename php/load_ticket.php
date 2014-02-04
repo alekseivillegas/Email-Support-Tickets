@@ -23,7 +23,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
         $emailst_username = $current_user->display_name;
     } else {
         $emailst_userid = 0;
-        $emailst_email = $wpdb->escape($_SESSION['isaest_email']);   
+        $emailst_email = esc_sql($_SESSION['isaest_email']);   
         $emailst_username = __( 'Guest', 'email-support-tickets' ).' ('.$emailst_email.')';
     }    
     
@@ -41,7 +41,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
         if($email_st_options['allow_all_tickets_to_be_viewed']=='true') {
             $emailst_username = $results[0]['email'];
         }        
-        echo '<div id="emailst_meta"><strong>'.base64_decode($results[0]['title']).'</strong> ('.$results[0]['resolution'].' - '.base64_decode($results[0]['type']).')</div>';
+        echo '<div id="emailst_meta"><strong>'. stripslashes( base64_decode($results[0]['title']) ) .'</strong> ('.$results[0]['resolution'].' - '.base64_decode($results[0]['type']).')</div>';
         echo '<table style="width:100%;">';
         echo '<thead><tr><th id="emailst_results_posted_by">'.__( 'Posted by', 'email-support-tickets' ).' '.$emailst_username.' (<span id="emailst_results_time_posted">'.date('Y-m-d g:i A',$results[0]['time_posted']).'</span>)</th></tr></thead>';
 

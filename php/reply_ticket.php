@@ -14,7 +14,7 @@ if (session_id() == "") {@session_start();};
 if ( current_user_can('manage_emailst_support_tickets')) { // admin edits such as closing tickets should happen here first:
     if(@isset($_POST['emailst_status']) && @isset($_POST['emailst_department']) && is_numeric($_POST['emailst_edit_primkey'])) {
         $emailst_department = base64_encode(strip_tags($_POST['emailst_department']));
-        $emailst_status = $wpdb->escape($_POST['emailst_status']);
+        $emailst_status = esc_sql($_POST['emailst_status']);
         $primkey = intval($_POST['emailst_edit_primkey']);
         // Update the Last Updated time stamp
         $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `type`='{$emailst_department}', `resolution`='{$emailst_status}' WHERE `primkey` ='{$primkey}';";
@@ -53,9 +53,9 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
         $emailst_email = $current_user->user_email;
     } else {
         $emailst_userid = 0;
-        $emailst_email = $wpdb->escape($_SESSION['isaest_email']);  
+        $emailst_email = esc_sql($_SESSION['isaest_email']);  
         if(trim($emailst_email)=='') {
-            $emailst_email = @$wpdb->escape($_POST['guest_email']);
+            $emailst_email = @esc_sql($_POST['guest_email']);
         }        
     }    
     
@@ -188,15 +188,17 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
             ";
            $wpdb->query($sql);
 
-		unset($isa_staff_reply); // @isa
+		$isa_staff_reply = '';
 
-            // Update the Last Updated time stamp
-            if($_POST['emailst_is_staff_reply']=='yes' && current_user_can('manage_emailst_support_tickets')) {
+		// Update the Last Updated time stamp
+
+		if( isset( $_POST['emailst_is_staff_reply'] ) && $_POST['emailst_is_staff_reply'] == 'yes' && current_user_can( 'manage_emailst_support_tickets' ) ) {
                     // This is a staff reply from the admin panel
                     $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."', `last_staff_reply` = '".time()."' WHERE `primkey` ='{$primkey}';";
 
-				$isa_staff_reply = 'true'; // @isa
+				$isa_staff_reply = 'true';
             } else {
+
                     // This is a reply from the front end
                     $updateSQL = "UPDATE `{$wpdb->prefix}emailst_tickets` SET `last_updated` = '".current_time( 'timestamp' )."' WHERE `primkey` ='{$primkey}';";
             }
@@ -222,14 +224,14 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
 	
 		} else {
 
-			// not a staff reply, so send email to admin @isa
+			// not a staff reply, so send email to admin
 
-           if($email_st_options['email']!=$results[0]['email']) {
+			if($email_st_options['email']!=$results[0]['email']) {
 
                 $to      = $email_st_options['email']; // Send this to the admin
                 $subject = __("Reply to a support ticket was received.", 'email-support-tickets' );
                 $message = __( 'There is a new reply on support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$primkey.'';
-			$message .= '<br /><br />Here is the reply:<br /><br />' . stripslashes_deep(base64_decode($emailst_message));// @test isa
+			$message .= '<br /><br />Here is the reply:<br /><br />' . stripslashes_deep(base64_decode($emailst_message));
                 $headers = '';
                     $headers .= 'MIME-Version: 1.0' . "\r\n";
                     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                
@@ -242,7 +244,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     }
 }
 
-if($_POST['emailst_goback']=='yes') {
+if ( isset( $_POST['emailst_goback'] ) && $_POST['emailst_goback'] == 'yes' ) {
     header("HTTP/1.1 301 Moved Permanently");
     header ('Location: '.get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$primkey);
 } else {

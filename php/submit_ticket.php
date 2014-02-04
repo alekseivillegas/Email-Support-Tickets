@@ -34,9 +34,9 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
         $emailst_email = $current_user->user_email;
     } else {
        $emailst_userid = 0;
-        $emailst_email = $wpdb->escape($_SESSION['isaest_email']);     
+        $emailst_email = esc_sql($_SESSION['isaest_email']);     
         if(trim($emailst_email)=='') {
-            $emailst_email = @$wpdb->escape($_POST['guest_email']);
+            $emailst_email = @esc_sql($_POST['guest_email']);
         }
     }
 

@@ -1,5 +1,5 @@
 <?php
-/* @todo if js works, then minify with http://jscompress.com/
+/*
 Plugin Name: Email Support Tickets
 Plugin URI: https://github.com/isabelc/Email-Support-Tickets
 Description: Support Ticket system that also sends message body via email.
@@ -24,6 +24,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Email Support Tickets; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+*/
+
+
+/*
+ *  @todo if js works, then minify with http://jscompress.com/
+ * @todo change menu label icon, and admin logo.
+
 */
 
 if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
@@ -316,6 +323,7 @@ if (!class_exists("Email_Support_Tickets")) {
                         ';
 
             $resolution = 'Open';
+		$output = '';
             $output .= '<div id="wst_tabs-1">';
             $table_name = $wpdb->prefix . "emailst_tickets";
             $sql = "SELECT * FROM `{$table_name}` WHERE `resolution`='{$resolution}' ORDER BY `last_updated` DESC;";
@@ -338,7 +346,7 @@ if (!class_exists("Email_Support_Tickets")) {
                     if (trim($result['last_staff_reply']) == '') {
                         $last_staff_reply = __('ticket creator', 'email-support-tickets' );
                     } else {
-                        if ($result['last_updated'] > $result['last_staff_reply']) {
+                        if ($result['last_updated'] > $result['last_staff_reply']) { // @todo make 'last_staff_reply' date udpdate when changing to closed status
                             $last_staff_reply = __('ticket creator', 'email-support-tickets' );
                         } else {
                             $last_staff_reply = '<strong>' . __('Staff Member', 'email-support-tickets' ) . '</strong>';
@@ -409,11 +417,6 @@ if (!class_exists("Email_Support_Tickets")) {
             $this->adminHeader();
 
             echo '<br style="clear:both;" /><br />';
-
-
-
-
-
             $primkey = intval($_GET['primkey']);
 
             $sql = "SELECT * FROM `{$wpdb->prefix}emailst_tickets` WHERE `primkey`='{$primkey}' LIMIT 0, 1;";
@@ -427,7 +430,7 @@ if (!class_exists("Email_Support_Tickets")) {
                     $user = false; // Guest
                     $theusersname = __('Guest', 'email-support-tickets' ) . ' - <strong>' . $results[0]['email'] . '</strong>';
                 }
-                echo '<div id="emailst_meta"><h1>' . base64_decode($results[0]['title']) . '</h1> (' . $results[0]['resolution'] . ' - ' . base64_decode($results[0]['type']) . ')</div>';
+                echo '<div id="emailst_meta"><h1>' . stripslashes( base64_decode($results[0]['title']) ) . '</h1> (' . $results[0]['resolution'] . ' - ' . base64_decode($results[0]['type']) . ')</div>';
                 echo '<table class="widefat" style="width:100%;">';
                 echo '<thead><tr><th id="emailst_results_posted_by">' . __('Posted by', 'email-support-tickets' ) . ' ' . $theusersname . ' (<span id="emailst_results_time_posted">' . date('Y-m-d g:i A', $results[0]['time_posted']) . '</span>)</th></tr></thead>';
 
@@ -474,6 +477,7 @@ if (!class_exists("Email_Support_Tickets")) {
                 }
                 echo '</td></tr></table>';
             }
+		$output = '';
             $output .= '
                             <script>
                                 jQuery(document).ready(function(){
@@ -950,7 +954,6 @@ or append like:
 dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 
 */
-// @todo change js file name
 	wp_enqueue_script('email-support-tickets',  plugins_url('js/email-support-tickets.js', __FILE__), array('jquery'));
 	$est_params = array(
 		'estPluginUrl' => plugin_dir_url( __FILE__ ),
