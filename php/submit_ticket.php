@@ -157,7 +157,7 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
     $to      = $email_st_options['email']; // Send this to the admin
     $subject = __("A new support ticket was received.", 'email-support-tickets' );
     $message = __( 'There is a new support ticket: ','email-support-tickets' ).get_admin_url().'admin.php?page=email-support-tickets-edit&primkey='.$lastID;
-	$message .= '<br /><br />Here is the initial message:<br /><br />' . stripslashes_deep(base64_decode($emailst_initial_message));// @test isa
+	$message .= '<br /><br />Here is the initial message:<br /><br />' . stripslashes_deep(base64_decode($emailst_initial_message));
     $headers = '';
         $headers .= 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";                

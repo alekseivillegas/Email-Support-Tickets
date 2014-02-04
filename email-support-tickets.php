@@ -344,7 +344,7 @@ if (!class_exists("Email_Support_Tickets")) {
                             $last_staff_reply = '<strong>' . __('Staff Member', 'email-support-tickets' ) . '</strong>';
                         }
                     }
-                    $output .= '<tr><td><a href="admin.php?page=email-support-tickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=email-support-tickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'email-support-tickets' ) . ' ' . $last_staff_reply . '</td></tr>';
+                    $output .= '<tr><td><a href="admin.php?page=email-support-tickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . stripslashes( base64_decode($result['title']) ) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=email-support-tickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'email-support-tickets' ) . ' ' . $last_staff_reply . '</td></tr>';
                 }
                 $output .= '</tbody></table>';
             }
@@ -380,7 +380,7 @@ if (!class_exists("Email_Support_Tickets")) {
                             $last_staff_reply = '<strong>' . __('Staff Member', 'email-support-tickets' ) . '</strong>';
                         }
                     }
-                    $output .= '<tr><td><a href="admin.php?page=email-support-tickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=email-support-tickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'email-support-tickets' ) . ' ' . $last_staff_reply . '</td></tr>';
+                    $output .= '<tr><td><a href="admin.php?page=email-support-tickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . stripslashes( base64_decode($result['title']) ) . '</a></td><td>' . $result['resolution'] . '</td><td><a href="' . get_admin_url() . 'user-edit.php?user_id=' . $result['user_id'] . '&wp_http_referer=' . urlencode(get_admin_url() . 'admin.php?page=email-support-tickets-admin') . '">' . $theusersname . '</a></td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'email-support-tickets' ) . ' ' . $last_staff_reply . '</td></tr>';
                 }
                 $output .= '</tbody></table>';
             }
@@ -557,7 +557,7 @@ if (!class_exists("Email_Support_Tickets")) {
                         }
                     }
 
-                    $output .= '<tr><td><a href="admin.php?page=email-support-tickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td>' . $last_staff_reply . '</td></tr>';
+                    $output .= '<tr><td><a href="admin.php?page=email-support-tickets-edit&primkey=' . $result['primkey'] . '" style="border:none;text-decoration:none;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . stripslashes( base64_decode($result['title']) ) . '</a></td><td>' . $result['resolution'] . '</td><td>' . $last_staff_reply . '</td></tr>';
                 }
                 $output .= '</tbody></table>';
             } else {
@@ -859,7 +859,7 @@ if (!class_exists("Email_Support_Tickets")) {
                                     }$output.='><img';
                                     if ($email_st_options['disable_inline_styles'] == 'false') {
                                         $output.=' style="float:left;border:none;margin-right:5px;"';
-                                    }$output.=' src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . base64_decode($result['title']) . '</a></td><td>' . $result['resolution'] . '</td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'email-support-tickets' ) . ' ' . $last_staff_reply . '</td></tr>';
+                                    }$output.=' src="' . plugins_url('/images/page_edit.png', __FILE__) . '" alt="' . __('View', 'email-support-tickets' ) . '"  /> ' . stripslashes( base64_decode($result['title']) ) . '</a></td><td>' . $result['resolution'] . '</td><td>' . date('Y-m-d g:i A', $result['last_updated']) . ' ' . __('by', 'email-support-tickets' ) . ' ' . $last_staff_reply . '</td></tr>';
                                 }
                                 $output .= '</table>';
                             }
