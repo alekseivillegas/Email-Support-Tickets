@@ -51,7 +51,9 @@ Installation
 2. Extract the zip file to your hard drive, using a 7-zip or your archiver of choice.
 3. Upload the `/Email-Support-Tickets/` directory to the `/wp-content/plugins/` directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress.
-5. Create a new page which will be your main support ticket page. Give it a title like "Support Tickets", or so.
-6. Inside this page, place this shortcode only: [EmailSupportTickets]
-7. Visit the **Email Support Tickets -> Settings** page and select that page as the "mainpage" for Email Support Tickets to use.
-8. Optional: set custom options in **Email Support Tickets -> Settings**.
+5. **Optional**: if you want to bring in your tickets from "wpsc Support Tickets" plugin, you must run this script now before you receive any new tickets:
+[https://gist.github.com/isabelc/8829632](https://gist.github.com/isabelc/8829632)
+6. Create a new page which will be your main support ticket page. Give it a title like "Support Tickets", or so.
+7. Inside this page, place this shortcode only: [EmailSupportTickets]
+8. Visit the **Email Support Tickets -> Settings** page and select that page as the "mainpage" for Email Support Tickets to use.
+9. Optional: set custom options in **Email Support Tickets -> Settings**.
