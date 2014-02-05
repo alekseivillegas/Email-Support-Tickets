@@ -3,7 +3,7 @@
 Plugin Name: Email Support Tickets
 Plugin URI: https://github.com/isabelc/Email-Support-Tickets
 Description: Support Ticket system that also sends message body via email.
-Version: 0.0.9
+Version: 1.0
 Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
@@ -26,21 +26,14 @@ along with Email Support Tickets; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-
-/*
- * @todo change menu label icon, and admin logo.
-*/
-
 if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
 	require_once(ABSPATH . 'wp-includes/pluggable.php');
 }
 
-//Global variables:
-global $Email_Support_Tickets, $email_support_tickets_version, $email_support_tickets_db_version, $emailst_error_reporting;// @test removed $APjavascriptQueue 
+global $Email_Support_Tickets, $email_support_tickets_version, $email_support_tickets_db_version, $emailst_error_reporting;
 $email_support_tickets_version = 1.0; // @todo update
 $email_support_tickets_db_version = 1.0; // @todo update
-// @test remove	$APjavascriptQueue = NULL; // @todo ??
-$emailst_error_reporting = true;// @test
+$emailst_error_reporting = false;// @test
 
 // Create the proper directory structure if it is not already created
 if (!is_dir(WP_CONTENT_DIR . '/uploads/')) {
@@ -154,7 +147,6 @@ if (!class_exists("Email_Support_Tickets")) {
 			}
 		}
 		
-
 		function adminHeader() {
 
 			if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
@@ -248,11 +240,11 @@ if (!class_exists("Email_Support_Tickets")) {
 
                 <strong>' . __('Email', 'email-support-tickets' ) . ':</strong> ' . __('The admin email where all new ticket &amp; reply notification emails will be sent', 'email-support-tickets' ) . '<br /><input name="email" value="' . $email_st_options['email'] . '" style="width:95%;" /><br /><br />
 
-                <strong>' . __('New Ticket Email', 'email-support-tickets' ) . '</strong> ' . __('The subject &amp; body of the email sent to the customer when creating a new ticket.', 'email-support-tickets' ) . '<br /><input name="email_new_ticket_subject" value="' . $email_st_options['email_new_ticket_subject'] . '" style="width:95%;" />
+                <strong>' . __('New Ticket Email:', 'email-support-tickets' ) . '</strong>   ' . __('The subject &amp; body of the email sent to the customer when creating a new ticket.', 'email-support-tickets' ) . '<br /><input name="email_new_ticket_subject" value="' . $email_st_options['email_new_ticket_subject'] . '" style="width:95%;" />
                 <textarea style="width:95%;" name="email_new_ticket_body">' . $email_st_options['email_new_ticket_body'] . '</textarea>
                 <br /><br />
 
-                <strong>' . __('New Reply Email', 'email-support-tickets' ) . '</strong> ' . __('The subject &amp; body of the email sent to the customer when there is a new reply.', 'email-support-tickets' ) . '<br /><input name="email_new_reply_subject" value="' . $email_st_options['email_new_reply_subject'] . '" style="width:95%;" />
+                <strong>' . __('New Reply Email:', 'email-support-tickets' ) . '</strong>   ' . __('The subject &amp; body of the email sent to the customer when there is a new reply.', 'email-support-tickets' ) . '<br /><input name="email_new_reply_subject" value="' . $email_st_options['email_new_reply_subject'] . '" style="width:95%;" />
                 <textarea style="width:95%;" name="email_new_reply_body">' . $email_st_options['email_new_reply_body'] . '</textarea>
                 <br /><br />
                 
@@ -664,31 +656,8 @@ if (!class_exists("Email_Support_Tickets")) {
 				require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 				dbDelta($sql);
 			}
-
-/*
-@test remove
-            $table_name = $wpdb->prefix . "wpstorecart_meta";
-
-            if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-
-                $sql = "
-                                    CREATE TABLE {$table_name} (
-                                    `primkey` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                    `value` TEXT NOT NULL,
-                                    `type` VARCHAR(32) NOT NULL,
-                                    `foreignkey` INT NOT NULL
-                                    );
-                                    ";
-
-                require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-                dbDelta($sql);
-            }
-*/
 			add_option( 'email_support_tickets_db_version', $email_support_tickets_db_version );
-
-
-			add_action( 'init', array( $this, 'init' ) ); // Create options on activation // @test		
-
+			add_action( 'init', array( $this, 'init' ) );
 		}
 
         // END Installation ==============================================================================================
@@ -777,7 +746,7 @@ if (!class_exists("Email_Support_Tickets")) {
                                 $output.='style="float:right;"';
                             } $output.=' ><img ';
                             if ($email_st_options['disable_inline_styles'] == 'false') {
-                                $output.='style="float:left;border:none;margin-right:5px;margin-top: 4px;"';
+                                $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button><button class="emailst-button" type="submit" name="emailst_submit" id="emailst_submit" ';
 
                             if ($email_st_options['disable_inline_styles'] == 'false') {
@@ -1007,8 +976,6 @@ if (class_exists("Email_Support_Tickets")) {
 if (isset($Email_Support_Tickets)) {
 
 	register_activation_hook( __FILE__, array( $Email_Support_Tickets, 'email_support_tickets_install' ) ); // Install DB schema
-//@test hook to activation hook to create optoins on activation    add_action('wpsc-support-tickets/h.php', array(&$Email_Support_Tickets, 'init'));
-
 	add_action( 'admin_menu', 'email_support_tickets_admin_panel' );
 	add_action( 'wp_dashboard_setup', array( $Email_Support_Tickets, 'email_support_tickets_dashboard_widgets' ) );
 
