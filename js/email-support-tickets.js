@@ -1,4 +1,4 @@
-jQuery(document).ready(function(){
+jQuery(function() {
         if(jQuery('.emailst-table').length != 0) {
             try {
                 if(jQuery('#emailst_nic_panel').length > 0) {

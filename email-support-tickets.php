@@ -3,7 +3,7 @@
 Plugin Name: Email Support Tickets
 Plugin URI: https://github.com/isabelc/Email-Support-Tickets
 Description: Support Ticket system that also sends message body via email.
-Version: 0.0.6
+Version: 0.0.8
 Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
@@ -106,6 +106,7 @@ if (!class_exists("Email_Support_Tickets")) {
 			}
 		}
 
+
 		function init() {
 			$this->get_admin_options();
 		}
@@ -128,7 +129,7 @@ if (!class_exists("Email_Support_Tickets")) {
 				'allow_all_tickets_to_be_viewed' => 'false',
 				'allow_html' => 'false',
 				'allow_closing_ticket' => 'false',
-				'allow_uploads' => 'true'// @test
+				'allow_uploads' => 'true'// @test @todo make option
 			);
 
 			if ($this->emailst_settings != NULL) {
@@ -145,10 +146,8 @@ if (!class_exists("Email_Support_Tickets")) {
 			return $ap_admin_options;
 		}
 
-
-	// @test
 		/**
-		 * enqueue styles
+		 * enqueue style
 		 */
 		function email_support_tickets_scripts() {
 			wp_register_style( 'est-style', plugin_dir_url( __FILE__ ) . 'css/style.css' );
@@ -536,11 +535,10 @@ if (!class_exists("Email_Support_Tickets")) {
                         <div style="float:left;margin-left:20px;"><h3>' . __('Actions', 'email-support-tickets' ) . '</h3>
                             <a onclick="if(confirm(\'' . __('Are you sure you want to delete this ticket?', 'email-support-tickets' ) . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" /> ' . __('Delete Ticket', 'email-support-tickets' ) . '</a>
                         </div>';
-// @test if uploads work            if ( $email_st_options['allow_uploads'] == 'true' ) {
-
+            if ( $email_st_options['allow_uploads'] == 'true' ) {
 
                 $output .= '<div style="float:left;margin-left:20px;"><h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file"></div>';
-// @test if uploads work            }
+            }
             $output .='         
                         <button class="button-secondary" onclick="if(confirm(\'' . __('Are you sure you want to cancel?', 'email-support-tickets' ) . '\')){window.location = \'' . get_admin_url() . 'admin.php?page=email-support-tickets-admin\';}return false;"  style="float:right;" ><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button> <button class="button-primary" type="submit" name="emailst_submit" id="emailst_submit" style="float:right;margin:0 5px 0 5px;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Update Ticket', 'email-support-tickets' ) . '" /> ' . __('Update Ticket', 'email-support-tickets' ) . '</button></td></tr>';
 
@@ -562,6 +560,7 @@ if (!class_exists("Email_Support_Tickets")) {
             $sql = "SELECT * FROM `{$table_name}` WHERE `resolution`='Open' ORDER BY `last_updated` DESC;";
             $results = $wpdb->get_results($sql, ARRAY_A);
             if (isset($results) && isset($results[0]['primkey'])) {
+			$output = '';
                 $output .= '<table class="widefat" style="width:100%"><thead><tr><th>' . __('Ticket', 'email-support-tickets' ) . '</th><th>' . __('Status', 'email-support-tickets' ) . '</th><th>' . __('Last Reply', 'email-support-tickets' ) . '</th></tr></thead><tbody>';
                 foreach ($results as $result) {
                     if ($result['user_id'] != 0) {
@@ -672,7 +671,7 @@ if (!class_exists("Email_Support_Tickets")) {
 			add_option( 'email_support_tickets_db_version', $email_support_tickets_db_version );
 
 
-			add_action( 'init', array( $Email_Support_Tickets, 'init' ) ); // Create options on activation // @test		
+			add_action( 'init', array( $this, 'init' ) ); // Create options on activation // @test		
 
 		}
 
@@ -727,6 +726,7 @@ if (!class_exists("Email_Support_Tickets")) {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/Add.png', __FILE__) . '" alt="' . __('Create a New Ticket', 'email-support-tickets' ) . '" /> ' . __('Create a New Ticket', 'email-support-tickets' ) . '</button><br /><br />';
                             $output .= '<form action="' . plugins_url('/php/submit_ticket.php', __FILE__) . '" method="post" enctype="multipart/form-data">';
+
                             if (@isset($_POST['guest_email'])) {
                                 $output .= '<input type="hidden" name="guest_email" value="' . esc_sql($_POST['guest_email']) . '" />';
                             }
@@ -745,9 +745,9 @@ if (!class_exists("Email_Support_Tickets")) {
                             if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="display:inline;width:100%;margin:0 auto 0 auto;" rows="5"';
                             } $output.='></textarea></td></tr>';
-// @test if uploads work                            if ($email_st_options['allow_uploads'] == 'true') {
+                            if ($email_st_options['allow_uploads'] == 'true') {
                                 $output .= '<tr><td><h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file"></td></tr>';
-// @test if uploads work                            }
+                            }
                             $exploder = explode('||', $email_st_options['departments']);
 
                             $output .= '<tr><td><h3>' . __('Department', 'email-support-tickets' ) . '</h3><select name="emailst_department" id="emailst_department">';
@@ -763,13 +763,13 @@ if (!class_exists("Email_Support_Tickets")) {
                             if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button><button class="emailst-button" type="submit" name="emailst_submit" id="emailst_submit" ';
+
                             if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:right;"';
-                            }$output.='><img ';
+						}$output.='><img ';
                             if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="float:left;border:none;margin-right:5px;"';
                             } $output.=' src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Submit Ticket', 'email-support-tickets' ) . '" /> ' . __('Submit Ticket', 'email-support-tickets' ) . '</button></td></tr>';
-
 
                             $output .= '</table></form>';
 
@@ -792,9 +792,9 @@ if (!class_exists("Email_Support_Tickets")) {
                             } $output .='></textarea></td></tr>
                                                     <tr id="email_st_reply_editor_table_tr2"><td>';
 
-// @test if uploads work                            if ($email_st_options['allow_uploads'] == 'true') {
+                            if ($email_st_options['allow_uploads'] == 'true') {
                                 $output .= '<h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file">';
-// @test if uploads work                            }
+                            }
 
                             if ($email_st_options['allow_closing_ticket'] == 'true') {
                                 $output .= '
@@ -980,7 +980,6 @@ dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 		'estPluginUrl' => plugin_dir_url( __FILE__ ),
 	);
 	wp_localize_script('email-support-tickets', 'estScriptParams', $est_params);
-	
 
 }
 
@@ -993,7 +992,6 @@ if (class_exists("Email_Support_Tickets")) {
 
 //Actions and Filters   
 if (isset($Email_Support_Tickets)) {
-
 
 	register_activation_hook( __FILE__, array( $Email_Support_Tickets, 'email_support_tickets_install' ) ); // Install DB schema
 //@test hook to activation    add_action('wpsc-support-tickets/h.php', array(&$Email_Support_Tickets, 'init')); // Create options on activation // @test

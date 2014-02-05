@@ -79,12 +79,7 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
     if(isset($results[0])) {
        
            $emailst_message = '';
-// @test if uploads work            if($email_st_options['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {// @test if uploads work
-
-
-            if( @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {// @test if uploads work
-
-
+            if($email_st_options['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {
                 /* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 
                 will have to check for any error messages and react as needed. */
@@ -100,8 +95,6 @@ if((is_user_logged_in() || @isset($_SESSION['isaest_email'])) && is_numeric($_PO
                         } else if (isset($_GET["PHPSESSID"])) {
                                 session_id($_GET["PHPSESSID"]);
                         }
-
-// @test can i upload without                         session_start();// @todo fix PHP notice
 
                 // Check post_max_size (http://us3.php.net/manual/en/features.file-upload.php#73762)
                         $POST_MAX_SIZE = @ini_get('post_max_size');
