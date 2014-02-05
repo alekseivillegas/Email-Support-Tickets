@@ -3,7 +3,7 @@
 Plugin Name: Email Support Tickets
 Plugin URI: https://github.com/isabelc/Email-Support-Tickets
 Description: Support Ticket system that also sends message body via email.
-Version: 0.0.8
+Version: 0.0.9
 Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
@@ -28,11 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 
 /*
- *  @todo if js works, then minify with http://jscompress.com/
  * @todo change menu label icon, and admin logo.
-
-@todo add option to enable attachment uploads
-
 */
 
 if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
@@ -40,11 +36,11 @@ if (file_exists(ABSPATH . 'wp-includes/pluggable.php')) {
 }
 
 //Global variables:
-global $Email_Support_Tickets, $email_support_tickets_version, $email_support_tickets_db_version, $APjavascriptQueue, $emailst_error_reporting;
+global $Email_Support_Tickets, $email_support_tickets_version, $email_support_tickets_db_version, $emailst_error_reporting;// @test removed $APjavascriptQueue 
 $email_support_tickets_version = 1.0; // @todo update
 $email_support_tickets_db_version = 1.0; // @todo update
-$APjavascriptQueue = NULL; // @todo ??
-$emailst_error_reporting = false;
+// @test remove	$APjavascriptQueue = NULL; // @todo ??
+$emailst_error_reporting = true;// @test
 
 // Create the proper directory structure if it is not already created
 if (!is_dir(WP_CONTENT_DIR . '/uploads/')) {
@@ -129,7 +125,7 @@ if (!class_exists("Email_Support_Tickets")) {
 				'allow_all_tickets_to_be_viewed' => 'false',
 				'allow_html' => 'false',
 				'allow_closing_ticket' => 'false',
-				'allow_uploads' => 'false'// @test @todo make option
+				'allow_uploads' => 'false'
 			);
 
 			if ($this->emailst_settings != NULL) {
@@ -165,7 +161,7 @@ if (!class_exists("Email_Support_Tickets")) {
 				die( __( 'Unable to Authenticate', 'email-support-tickets' ) );
 			}
 			echo '<div style="padding: 20px 10px 10px 10px;">';
-			echo '<div style="float:left;"><img src="' . plugin_dir_url(__FILE__) . '/images/logo.png" alt="Email_Support_Tickets" /></div>';
+			echo '<h1>Email Support Tickets</h1>';
 			echo '</div><br style="clear:both;" />';
 		}
 
@@ -553,7 +549,7 @@ if (!class_exists("Email_Support_Tickets")) {
             } $output.='>' . __('Closed', 'email-support-tickets' ) . '</option>
                         </select></div>
                         <div style="float:left;margin-left:20px;"><h3>' . __('Actions', 'email-support-tickets' ) . '</h3>
-                            <a onclick="if(confirm(\'' . __('Are you sure you want to delete this ticket?', 'email-support-tickets' ) . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" /> ' . __('Delete Ticket', 'email-support-tickets' ) . '</a>
+                            <a onclick="if(confirm(\'' . __('Are you sure you want to delete this ticket?', 'email-support-tickets' ) . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" style="padding-top: 3px;float: left;padding-right: 4px;" /> ' . __('Delete Ticket', 'email-support-tickets' ) . '</a>
                         </div>';
             if ( $email_st_options['allow_uploads'] == 'true' ) {
 
@@ -946,9 +942,20 @@ if (!class_exists("Email_Support_Tickets")) {
 
 
             return $output;
-        }
+		}// END SHORTCODE
 
-        // END SHORTCODE ================================================
+		function add_menu_icons_styles(){
+			?>
+			 
+			<style>
+			#adminmenu #toplevel_page_email-support-tickets-admin div.wp-menu-image:before {
+			content: '\f323';
+			}
+			</style>
+			 
+			<?php
+		}
+
     }
 
     /**
@@ -969,7 +976,7 @@ if (!function_exists("email_support_tickets_admin_panel")) {
 			return;
 		}
 		if (function_exists('add_menu_page')) {
-			add_menu_page( __( 'Email Support Tickets', 'email-support-tickets' ), __( 'Support Tickets', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-admin', array( $Email_Support_Tickets, 'printAdminPage' ), plugin_dir_url( __FILE__ ) . '/images/controller.png' );
+			add_menu_page( __( 'Email Support Tickets', 'email-support-tickets' ), __( 'Support Tickets', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-admin', array( $Email_Support_Tickets, 'printAdminPage' ) );
 			$settingsPage = add_submenu_page( 'email-support-tickets-admin', __( 'Settings', 'email-support-tickets' ), __( 'Settings', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-settings', array( $Email_Support_Tickets, 'printAdminPageSettings' ) );
 			$editPage = add_submenu_page( NULL, __( 'Reply to Support Ticket', 'email-support-tickets' ), __( 'Reply to Support Tickets', 'email-support-tickets' ), 'manage_emailst_support_tickets', 'email-support-tickets-edit', array( $Email_Support_Tickets, 'printAdminPageEdit' ) );
 			add_action( "admin_print_scripts-$editPage", array( $Email_Support_Tickets, 'addHeaderCode' ) );
@@ -981,16 +988,6 @@ if (!function_exists("email_support_tickets_admin_panel")) {
 
 function email_st_load_init() {
 	load_plugin_textdomain( 'email-support-tickets', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-/**
- @todo notice that to get plugin folder dir name, use: 
-
-dirname( plugin_basename( __FILE__ ) )
-
-or append like:
-
-dirname( plugin_basename( __FILE__ ) ) . '/languages/'
-
-*/
 	wp_enqueue_script('email-support-tickets',  plugins_url('js/email-support-tickets.js', __FILE__), array('jquery'));
 	$est_params = array(
 		'estPluginUrl' => plugin_dir_url( __FILE__ ),
@@ -1010,13 +1007,14 @@ if (class_exists("Email_Support_Tickets")) {
 if (isset($Email_Support_Tickets)) {
 
 	register_activation_hook( __FILE__, array( $Email_Support_Tickets, 'email_support_tickets_install' ) ); // Install DB schema
-//@test hook to activation    add_action('wpsc-support-tickets/h.php', array(&$Email_Support_Tickets, 'init')); // Create options on activation // @test
+//@test hook to activation hook to create optoins on activation    add_action('wpsc-support-tickets/h.php', array(&$Email_Support_Tickets, 'init'));
 
 	add_action( 'admin_menu', 'email_support_tickets_admin_panel' );
 	add_action( 'wp_dashboard_setup', array( $Email_Support_Tickets, 'email_support_tickets_dashboard_widgets' ) );
-    //add_action('wp_head', array(&$Email_Support_Tickets, 'addHeaderCode')); // Place EmailSupportTickets comment into header
+
 	add_shortcode( 'EmailSupportTickets', array( $Email_Support_Tickets, 'email_support_tickets_shortcode' ) );
 	add_action( "wp_print_scripts", array( $Email_Support_Tickets, "addHeaderCode" ) );
 	add_action( 'init', 'email_st_load_init' );
 	add_action( 'wp_enqueue_scripts', array( $Email_Support_Tickets, 'email_support_tickets_scripts' ) );
+	add_action( 'admin_head', array( $Email_Support_Tickets, 'add_menu_icons_styles' ) );
 }
