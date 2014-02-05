@@ -47,13 +47,30 @@ Pending Issues and Enhancements - forking and contributing is welcome!
 Installation
 ------------
 
-1. Download the email-support-tickets.zip file
-2. Extract the zip file to your hard drive, using a 7-zip or your archiver of choice.
-3. Upload the `/Email-Support-Tickets/` directory to the `/wp-content/plugins/` directory.
-4. Activate the plugin through the 'Plugins' menu in WordPress.
-5. **Optional**: if you want to bring in your tickets from "wpsc Support Tickets" plugin, you must run this script now before you receive any new tickets:
+
+**Use This Method If You Don't Want To Import Tickets from wpsc Support Tickets (or if you are just brand new to tickets)**
+
+1.  Download the Email-Support-Tickets-master.zip file from the right side of this page.
+2.  In your WordPress dashboard, go to “Plugins -> Add New“. Click “Upload“. Click “Browse” and locate the .zip file which you downloaded.
+3.  Click “Install Now“.
+4.  Click “Activate Plugin“.
+5.  Create a new page which will be your main support ticket page. Give it a title like "Support Tickets", or so.
+6.  Inside this page, place this shortcode only: `[EmailSupportTickets]`
+7.  Visit the **Email Support Tickets -> Settings** page and select that page as the "mainpage" for Email Support Tickets to use.
+8.  Optional: set custom options at **Email Support Tickets -> Settings**.
+
+
+
+**Use This Method If You WANT To Import Your Tickets from wpsc Support Tickets**
+
+1.  Download the Email-Support-Tickets-master.zip file from the right side of this page.
+2.  In your WordPress dashboard, go to “Plugins -> Add New“. Click “Upload“. Click “Browse” and locate the .zip file which you downloaded.
+3.  Click “Install Now“.
+4.  Click “Activate Plugin“.
+5.  To bring in your tickets from "wpsc Support Tickets" plugin, you must run this script now before you receive any new tickets:
 [https://gist.github.com/isabelc/8829632](https://gist.github.com/isabelc/8829632)
-6. Create a new page which will be your main support ticket page. Give it a title like "Support Tickets", or so.
-7. Inside this page, place this shortcode only: [EmailSupportTickets]
-8. Visit the **Email Support Tickets -> Settings** page and select that page as the "mainpage" for Email Support Tickets to use.
-9. Optional: set custom options in **Email Support Tickets -> Settings**.
+  Follow the steps on that link to import your tickets.
+
+6.  Edit your main support ticket page that you were using for wpsc Support Tickets. Change the shortcode to: `[EmailSupportTickets]`
+7.  Visit the **Email Support Tickets -> Settings** page and select that page as the "mainpage" for Email Support Tickets to use.
+8.  Set your custom settings at **Email Support Tickets -> Settings**. They have changed, so if you don't like the defaults, you will have to set your desired options now.
