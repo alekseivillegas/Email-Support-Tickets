@@ -3,7 +3,7 @@
 Plugin Name: Email Support Tickets
 Plugin URI: https://github.com/isabelc/Email-Support-Tickets
 Description: Support Ticket system that also sends message body via email.
-Version: 0.0.3
+Version: 0.0.5
 Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
@@ -86,6 +86,7 @@ if (!class_exists("Email_Support_Tickets")) {
 		var $has_displayed_compat2 = false; // hack for Jetpack compatibility
 
 		function Email_Support_Tickets() { //constructor
+
 			// Let's make sure the admin is always in charge
 			if (is_user_logged_in()) {
 				if (is_super_admin() || is_admin()) {
@@ -125,22 +126,37 @@ if (!class_exists("Email_Support_Tickets")) {
 				'allow_all_tickets_to_be_viewed' => 'false',
 				'allow_html' => 'false',
 				'allow_closing_ticket' => 'false',
-				'allow_uploads' => 'false'
+				'allow_uploads' => 'true'// @test
 			);
 
-            if ($this->emailst_settings != NULL) {
-                $email_st_options = $this->emailst_settings;
-            } else {
-                $email_st_options = get_option($this->admin_options_name);
-            }
-            if (!empty($email_st_options)) {
-                foreach ($email_st_options as $key => $option) {
-                    $ap_admin_options[$key] = $option;
-                }
-            }
-            update_option($this->admin_options_name, $ap_admin_options);
-            return $ap_admin_options;
-        }
+			if ($this->emailst_settings != NULL) {
+				$email_st_options = $this->emailst_settings;
+			} else {
+				$email_st_options = get_option($this->admin_options_name);
+			}
+			if (!empty($email_st_options)) {
+				foreach ($email_st_options as $key => $option) {
+					$ap_admin_options[$key] = $option;
+				}
+			}
+			update_option($this->admin_options_name, $ap_admin_options);
+			return $ap_admin_options;
+		}
+
+
+	// @test
+		/**
+		 * enqueue styles
+		 */
+		function email_support_tickets_scripts() {
+			wp_register_style( 'est-style', plugin_dir_url( __FILE__ ) . 'css/style.css' );
+	
+			$email_st_options = $this->get_admin_options();
+			if ( is_page( $email_st_options['mainpage'] ) ) {
+				wp_enqueue_style( 'est-style' );
+			}
+		}
+		
 
 		function adminHeader() {
 
@@ -210,7 +226,7 @@ if (!class_exists("Email_Support_Tickets")) {
 			<p><strong><?php _e('Main Page', 'email-support-tickets' ); ?>:</strong><?php _e( 'You need to use a Page as the base for Email Support Tickets.', 'email-support-tickets' ); ?><br />
 			<select name="EmailSupportTicketsmainpage">
 			<option value="">
-			<?php attribute_escape( __( 'Select page', 'email-support-tickets' ) ); ?>
+			<?php __( 'Select page', 'email-support-tickets' ); ?>
 			</option>
 
 			<?php $pages = get_pages();
@@ -289,18 +305,18 @@ if (!class_exists("Email_Support_Tickets")) {
 		<?php }
 
 
-        //Prints out the admin page ================================================================================
-        function printAdminPage() {
-            global $wpdb;
+		/**
+		 * Prints out the admin page
+		 */
+		function printAdminPage() {
+			global $wpdb;
 
-            $email_st_options = $this->get_admin_options();
-            if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
-                die(__('Unable to Authenticate', 'email-support-tickets' ));
-            }
+			$email_st_options = $this->get_admin_options();
+			if (function_exists('current_user_can') && !current_user_can('manage_emailst_support_tickets')) {
+				die(__('Unable to Authenticate', 'email-support-tickets' ));
+			}
 
-
-
-            echo '
+			echo '
                         <script type="text/javascript">
                             jQuery(function() {
                                 jQuery( "#wst_tabs" ).tabs();
@@ -346,7 +362,7 @@ if (!class_exists("Email_Support_Tickets")) {
                     if (trim($result['last_staff_reply']) == '') {
                         $last_staff_reply = __('ticket creator', 'email-support-tickets' );
                     } else {
-                        if ($result['last_updated'] > $result['last_staff_reply']) { // @todo make 'last_staff_reply' date udpdate when changing to closed status
+                        if ($result['last_updated'] > $result['last_staff_reply']) {
                             $last_staff_reply = __('ticket creator', 'email-support-tickets' );
                         } else {
                             $last_staff_reply = '<strong>' . __('Staff Member', 'email-support-tickets' ) . '</strong>';
@@ -938,6 +954,7 @@ if (!function_exists("email_support_tickets_admin_panel")) {
 	}
 }
 
+
 function email_st_load_init() {
 	load_plugin_textdomain( 'email-support-tickets', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
@@ -959,6 +976,8 @@ dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 		'estPluginUrl' => plugin_dir_url( __FILE__ ),
 	);
 	wp_localize_script('email-support-tickets', 'estScriptParams', $est_params);
+	
+
 }
 
 /**
@@ -981,4 +1000,5 @@ if (isset($Email_Support_Tickets)) {
 	add_shortcode( 'EmailSupportTickets', array( $Email_Support_Tickets, 'email_support_tickets_shortcode' ) );
 	add_action( "wp_print_scripts", array( $Email_Support_Tickets, "addHeaderCode" ) );
 	add_action( 'init', 'email_st_load_init' );
+	add_action( 'wp_enqueue_scripts', array( $Email_Support_Tickets, 'email_support_tickets_scripts' ) );
 }

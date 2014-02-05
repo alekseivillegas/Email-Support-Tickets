@@ -1,0 +1,10 @@
+.nicEdit-pane #src, .nicEdit-pane #alt,.nicEdit-pane #align,
+.nicEdit-pane #href, .nicEdit-pane #title, .nicEdit-pane #target{
+	min-height:30px;
+}
+.nicEdit-pane #align, .nicEdit-pane #target{
+font-size:15px;padding-top:3px;
+}
+.nicEdit-pane input[type="submit"] {
+    color:#000;
+}
