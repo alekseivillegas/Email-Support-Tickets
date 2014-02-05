@@ -129,7 +129,7 @@ if (!class_exists("Email_Support_Tickets")) {
 				'allow_all_tickets_to_be_viewed' => 'false',
 				'allow_html' => 'false',
 				'allow_closing_ticket' => 'false',
-				'allow_uploads' => 'true'// @test @todo make option
+				'allow_uploads' => 'false'// @test @todo make option
 			);
 
 			if ($this->emailst_settings != NULL) {
@@ -215,6 +215,9 @@ if (!class_exists("Email_Support_Tickets")) {
 				if (isset($_POST['allow_guests'])) {
 					$email_st_options['allow_guests'] = esc_sql($_POST['allow_guests']);
 				}
+				if (isset($_POST['allow_uploads'])) {
+					$email_st_options['allow_uploads'] = esc_sql($_POST['allow_uploads']);
+				}
 
 				update_option($this->admin_options_name, $email_st_options); ?>
 				<div class="updated"><p><strong>
@@ -257,12 +260,11 @@ if (!class_exists("Email_Support_Tickets")) {
                 <textarea style="width:95%;" name="email_new_reply_body">' . $email_st_options['email_new_reply_body'] . '</textarea>
                 <br /><br />
                 
-                 <strong>' . __('Registration Page URL', 'email-support-tickets' ) . ':</strong> ' . __('Only if you have a custom registration page. Enter entire URL.', 'email-support-tickets' ) . ' <br /><input name="registration" value="' . $email_st_options['registration'] . '" style="width:95%;" /><br /><br />
+                 <strong>' . __('Registration Page URL', 'email-support-tickets' ) . ':</strong> ' . __('Only if you have a custom registration page. Enter entire URL.', 'email-support-tickets' ) . ' <br /><input name="registration" value="' . $email_st_options['registration'] . '" style="width:95%;" /><br /><br />'; ?>
 
-
-                <p><strong>' . __('Disable inline styles', 'email-support-tickets' ) . ':</strong> ' . __('Set this to true if you want to disable the inline CSS styles.', 'email-support-tickets' ) . '  <br />
+                <p><strong><?php _e('Disable inline styles', 'email-support-tickets' ); ?>: </strong> <?php _e('Set this to true if you want to disable the inline CSS styles.', 'email-support-tickets' ); ?> &nbsp;  <br />
                 <select name="disable_inline_styles">
-                 ';
+                 <?php
 
             $pagesX[0] = 'true';
             $pagesX[1] = 'false';
@@ -277,7 +279,7 @@ if (!class_exists("Email_Support_Tickets")) {
                 echo $option;
             } ?>
                 
-			</select>
+			</select></p><!-- @test added extra closing p . was missing. -->
 
 			<p><strong><?php _e( 'Allow Guests', 'email-support-tickets' ); ?>:</strong><?php _e( 'Set this to true if you want Guests to be able to use the support ticket system.', 'email-support-tickets' ); ?><br />
                 <select name="allow_guests">
@@ -297,6 +299,24 @@ if (!class_exists("Email_Support_Tickets")) {
 
                 </select>
                 </p>
+
+			<p><strong><?php _e('Allow uploads', 'email-support-tickets' ); ?>: </strong> <?php _e('Set this to true if you want to allow uploading of attachments for tickets.', 'email-support-tickets' ); ?> &nbsp;  <br />
+                <select name="allow_uploads">
+                 <?php
+
+	            $pagesX[0] = 'true';
+	            $pagesX[1] = 'false';
+	            foreach ($pagesX as $pagg) {
+	                $option = '<option value="' . $pagg . '"';
+	                if ($pagg == $email_st_options['allow_uploads']) {
+	                    $option .= ' selected="selected"';
+	                }
+	                $option .='>';
+	                $option .= $pagg;
+	                $option .= '</option>';
+	                echo $option;
+	            } ?>
+			</select></p>
 			<?php email_support_tickets_settings(); ?>
             <input type="hidden" name="update_EmailSupportTicketsSettings" value="update" />
             <div> <input class="button-primary" style="position:relative;z-index:999999;" type="submit" name="update_EmailSupportTicketsSettings_submit" value="<?php _e('Update Settings', 'email-support-tickets' ); ?>" /></div>
@@ -961,10 +981,6 @@ if (!function_exists("email_support_tickets_admin_panel")) {
 
 function email_st_load_init() {
 	load_plugin_textdomain( 'email-support-tickets', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
-
-// use this: load_plugin_textdomain( 'email-support-tickets', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
 /**
  @todo notice that to get plugin folder dir name, use: 
 

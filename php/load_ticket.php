@@ -5,7 +5,7 @@ if($emailst_error_reporting==false) {
 }
 if (!function_exists('add_action'))
 {
-    require_once("../../../../wp-config.php");// @todo remove
+    require_once("../../../../wp-config.php");
 }
 
 global $current_user, $wpdb;
