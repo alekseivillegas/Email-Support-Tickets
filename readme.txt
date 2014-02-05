@@ -18,6 +18,7 @@ Email Support Tickets is a support ticket system for WordPress that also sends t
    * Does not send email to admin when he, himself, replies. Logic: when admin replies to a ticket, if this admin's user_email is the same as the plugin's "send-to email" setting, then do not send email notification to this admin for this reply which he, himself, wrote. 
  * Email messages also include a note at the bottom to "See the entire support ticket and give your reply" with a link back to the main support ticket page. This is to encourage them to post their reply on the main support ticket page, since this is the only way to keep a record of it in the ticket system. If the customer replies directly via email (email reply), then there will be no record of this reply in the ticket system. But I find that this has not been a problem, since my customers have always obeyed this note to reply back at the main page.
  * Option to enter a Custom Registration URL. The plugin's 'Please log in or register' message links to the default WP registration page. If you have disabled registration in favor of a custom/manual registration page, this gives you option to send customers to that better registration page. Prevents visitors from getting upset by the "User registration is currently not allowed" notice.
+ * In "wpsc Support Tickets", a support ticket thread will show the Initial Message as "Posted by: {author **display_name**}, but all replies show "Posted by "{author ""nicename""}. This was confusing. I changed 'nicename' to 'display name' for consistency, and to give customers control over their display name.
  * Option to allow uploading of attachments into tickets.
 
 
@@ -49,6 +50,7 @@ Email Support Tickets is a support ticket system for WordPress that also sends t
 6. Inside this page, place this shortcode only: [EmailSupportTickets]
 7. Visit the **Email Support Tickets -> Settings** page and select that page as the "mainpage" for Email Support Tickets to use.
 8. Optional: set custom options in **Email Support Tickets -> Settings**.
+9. **Optional:**  at this point, if you want to import your tickets from when you were using "wpsc Support Tickets" plugin, you will need to run this script.
 
 == Frequently Asked Questions ==
 
