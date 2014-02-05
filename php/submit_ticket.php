@@ -41,7 +41,16 @@ if(is_user_logged_in() || @isset($_SESSION['isaest_email'])) {
     }
 
     $emailst_initial_message = '';
-    if($email_st_options['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {
+    
+
+// @test if uploads work		if($email_st_options['allow_uploads']=='true' && @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {
+
+
+if( @isset($_FILES["emailst_file"]) && @$_FILES["emailst_file"]["error"] != 4 ) {
+// @test if uploads work
+
+
+
 	/* Handles the error output. This error message will be sent to the uploadSuccess event handler.  The event handler
 	will have to check for any error messages and react as needed. */
 	function HandleError($message) {

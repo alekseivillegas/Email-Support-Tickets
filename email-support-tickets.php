@@ -3,7 +3,7 @@
 Plugin Name: Email Support Tickets
 Plugin URI: https://github.com/isabelc/Email-Support-Tickets
 Description: Support Ticket system that also sends message body via email.
-Version: 0.0.5
+Version: 0.0.6
 Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
@@ -30,6 +30,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 /*
  *  @todo if js works, then minify with http://jscompress.com/
  * @todo change menu label icon, and admin logo.
+
+@todo add option to enable attachment uploads
 
 */
 
@@ -534,9 +536,11 @@ if (!class_exists("Email_Support_Tickets")) {
                         <div style="float:left;margin-left:20px;"><h3>' . __('Actions', 'email-support-tickets' ) . '</h3>
                             <a onclick="if(confirm(\'' . __('Are you sure you want to delete this ticket?', 'email-support-tickets' ) . '\')){return true;}return false;" href="' . plugins_url('/php/delete_ticket.php', __FILE__) . '?ticketid=' . $primkey . '"><img src="' . plugins_url('/images/delete.png', __FILE__) . '" alt="delete" /> ' . __('Delete Ticket', 'email-support-tickets' ) . '</a>
                         </div>';
-            if ( $email_st_options['allow_uploads'] == 'true' ) {
+// @test if uploads work            if ( $email_st_options['allow_uploads'] == 'true' ) {
+
+
                 $output .= '<div style="float:left;margin-left:20px;"><h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file"></div>';
-            }
+// @test if uploads work            }
             $output .='         
                         <button class="button-secondary" onclick="if(confirm(\'' . __('Are you sure you want to cancel?', 'email-support-tickets' ) . '\')){window.location = \'' . get_admin_url() . 'admin.php?page=email-support-tickets-admin\';}return false;"  style="float:right;" ><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button> <button class="button-primary" type="submit" name="emailst_submit" id="emailst_submit" style="float:right;margin:0 5px 0 5px;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Update Ticket', 'email-support-tickets' ) . '" /> ' . __('Update Ticket', 'email-support-tickets' ) . '</button></td></tr>';
 
@@ -741,9 +745,9 @@ if (!class_exists("Email_Support_Tickets")) {
                             if ($email_st_options['disable_inline_styles'] == 'false') {
                                 $output.='style="display:inline;width:100%;margin:0 auto 0 auto;" rows="5"';
                             } $output.='></textarea></td></tr>';
-                            if ($email_st_options['allow_uploads'] == 'true') {
+// @test if uploads work                            if ($email_st_options['allow_uploads'] == 'true') {
                                 $output .= '<tr><td><h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file"></td></tr>';
-                            }
+// @test if uploads work                            }
                             $exploder = explode('||', $email_st_options['departments']);
 
                             $output .= '<tr><td><h3>' . __('Department', 'email-support-tickets' ) . '</h3><select name="emailst_department" id="emailst_department">';
@@ -788,9 +792,9 @@ if (!class_exists("Email_Support_Tickets")) {
                             } $output .='></textarea></td></tr>
                                                     <tr id="email_st_reply_editor_table_tr2"><td>';
 
-                            if ($email_st_options['allow_uploads'] == 'true') {
+// @test if uploads work                            if ($email_st_options['allow_uploads'] == 'true') {
                                 $output .= '<h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file">';
-                            }
+// @test if uploads work                            }
 
                             if ($email_st_options['allow_closing_ticket'] == 'true') {
                                 $output .= '
