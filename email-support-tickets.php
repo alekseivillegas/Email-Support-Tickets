@@ -262,7 +262,7 @@ if (!class_exists("Email_Support_Tickets")) {
                 
                  <strong>' . __('Registration Page URL', 'email-support-tickets' ) . ':</strong> ' . __('Only if you have a custom registration page. Enter entire URL.', 'email-support-tickets' ) . ' <br /><input name="registration" value="' . $email_st_options['registration'] . '" style="width:95%;" /><br /><br />'; ?>
 
-                <p><strong><?php _e('Disable inline styles', 'email-support-tickets' ); ?>: </strong> <?php _e('Set this to true if you want to disable the inline CSS styles.', 'email-support-tickets' ); ?> &nbsp;  <br />
+                <p><strong><?php _e('Disable inline styles', 'email-support-tickets' ); ?>: </strong>&nbsp; <?php _e('Set this to true if you want to disable the inline CSS styles.', 'email-support-tickets' ); ?>  <br />
                 <select name="disable_inline_styles">
                  <?php
 
@@ -279,9 +279,9 @@ if (!class_exists("Email_Support_Tickets")) {
                 echo $option;
             } ?>
                 
-			</select></p><!-- @test added extra closing p . was missing. -->
+			</select></p>
 
-			<p><strong><?php _e( 'Allow Guests', 'email-support-tickets' ); ?>:</strong><?php _e( 'Set this to true if you want Guests to be able to use the support ticket system.', 'email-support-tickets' ); ?><br />
+			<p><strong><?php _e( 'Allow Guests', 'email-support-tickets' ); ?>:</strong> &nbsp; <?php _e( 'Set this to true if you want Guests to be able to use the support ticket system.', 'email-support-tickets' ); ?><br />
                 <select name="allow_guests">
 			<?php 
 			$pagesY[0] = 'true';
@@ -300,7 +300,7 @@ if (!class_exists("Email_Support_Tickets")) {
                 </select>
                 </p>
 
-			<p><strong><?php _e('Allow uploads', 'email-support-tickets' ); ?>: </strong> <?php _e('Set this to true if you want to allow uploading of attachments for tickets.', 'email-support-tickets' ); ?> &nbsp;  <br />
+			<p><strong><?php _e('Allow uploads', 'email-support-tickets' ); ?>: </strong> &nbsp; <?php _e('Set this to true if you want to allow uploading of attachments for tickets.', 'email-support-tickets' ); ?> <br />
                 <select name="allow_uploads">
                  <?php
 
@@ -560,7 +560,7 @@ if (!class_exists("Email_Support_Tickets")) {
                 $output .= '<div style="float:left;margin-left:20px;"><h3>' . __('Attach a file', 'email-support-tickets' ) . '</h3> <input type="file" name="emailst_file" id="emailst_file"></div>';
             }
             $output .='         
-                        <button class="button-secondary" onclick="if(confirm(\'' . __('Are you sure you want to cancel?', 'email-support-tickets' ) . '\')){window.location = \'' . get_admin_url() . 'admin.php?page=email-support-tickets-admin\';}return false;"  style="float:right;" ><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button> <button class="button-primary" type="submit" name="emailst_submit" id="emailst_submit" style="float:right;margin:0 5px 0 5px;"><img style="float:left;border:none;margin-right:5px;" src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Update Ticket', 'email-support-tickets' ) . '" /> ' . __('Update Ticket', 'email-support-tickets' ) . '</button></td></tr>';
+                        <button class="button-secondary" onclick="if(confirm(\'' . __('Are you sure you want to cancel?', 'email-support-tickets' ) . '\')){window.location = \'' . get_admin_url() . 'admin.php?page=email-support-tickets-admin\';}return false;"  style="float:right;" ><img style="float:left;border:none;margin-right:5px;margin-top: 4px;" src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button> <button class="button-primary" type="submit" name="emailst_submit" id="emailst_submit" style="float:right;margin:0 5px 0 5px;"><img style="float:left;border:none;margin-right:5px;margin-top: 4px;" src="' . plugins_url('/images/page_white_text.png', __FILE__) . '" alt="' . __('Update Ticket', 'email-support-tickets' ) . '" /> ' . __('Update Ticket', 'email-support-tickets' ) . '</button></td></tr>';
 
 
             $output .= '</table></form>';
@@ -781,7 +781,7 @@ if (!class_exists("Email_Support_Tickets")) {
                                 $output.='style="float:right;"';
                             } $output.=' ><img ';
                             if ($email_st_options['disable_inline_styles'] == 'false') {
-                                $output.='style="float:left;border:none;margin-right:5px;"';
+                                $output.='style="float:left;border:none;margin-right:5px;margin-top: 4px;"';
                             } $output.=' src="' . plugins_url('/images/stop.png', __FILE__) . '" alt="' . __('Cancel', 'email-support-tickets' ) . '" /> ' . __('Cancel', 'email-support-tickets' ) . '</button><button class="emailst-button" type="submit" name="emailst_submit" id="emailst_submit" ';
 
                             if ($email_st_options['disable_inline_styles'] == 'false') {
