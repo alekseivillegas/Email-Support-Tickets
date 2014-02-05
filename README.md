@@ -40,6 +40,8 @@ Pending Issues and Enhancements - forking and contributing is welcome!
 
 3.  Less "echoing" of HTML throughout.
 
+4.  Localize all strings; add .pot file.
+
 
 Installation
 ------------

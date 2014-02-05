@@ -35,11 +35,9 @@ Email Support Tickets is a support ticket system for WordPress that also sends t
 *(Will get this done when I have some free time.)*
 
 1.  This plugin still loads wp-config.php manually into several scripts. This has to be replaced by submitting the ticket forms with ajax. This has to be done for 4 forms. When this gets done, this plugin can be submitted to the WP plugin repository. Feel free to do this.
-
 2.  Use the Settings API for the options page.
-
 3.  Less "echoing" of HTML throughout.
-
+4.  Localize all strings; add .pot file.
 
 == Installation ==
 
