@@ -10,7 +10,7 @@ License: GPL2
 Text Domain: email-support-tickets
 Domain Path: languages
 
-Copyright 2013 Isabel Castillo (email : me@isabelcastillo.com)
+Copyright 2014 Isabel Castillo (email : me@isabelcastillo.com)
 
 Email Support Tickets is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
